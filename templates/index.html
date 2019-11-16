@@ -1,18 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>home</title>
-		<link rel="stylesheet" href="/static/css/style.css">
-    </head>
+{% extends "base.html" %}
 
-    <body>
-        <h1>Welcome back to HTML ;)</h1>
-		<br>
-		<a href="/about"> apie </a>
-		<br>
-		<a href="/porfolio"> porfolio </a>
-		<br>
-		<img src="/static/img/logo.png">
-    </body>
-</html>
+{% block content %}
+    <p>Hello, index.html here!</p>
+
+    <p>{{some_text}}</p>
+    <p>Current year: {{current_year}}</p>
+
+    {% for city in cities %}
+        <p>{{city}}</p>
+    {% endfor %}
+
+    {% if cities %}
+        <p>The cities variable exists.</p>
+    {% else %}
+        <p>There are no cities :(</p>
+    {% endif %}
+
+    {% if oranges %}
+        <p>The oranges variable exists.</p>
+    {% else %}
+        <p>There are no oranges :(</p>
+    {% endif %}
+{% endblock content %}

@@ -1,29 +1,34 @@
-from flask import Flask, render_template
+import datetime
+from flask import Flask, render_template, request
 
+app = Flask(__name__)
 
-
-app = Flask("hi")
 
 @app.route("/")
 def index():
-	return render_template("index.html")
+    some_text = "Message from the handler."
+    current_year = datetime.datetime.now().year
 
-	
-	
-	
-@app.route("/about")
+    cities = ["Boston", "Vienna", "Paris", "Berlin"]
+
+    return render_template("index.html", some_text=some_text, current_year=current_year, cities=cities)
+
+
+@app.route("/about-me", methods=["GET", "POST"])
 def about():
-	return render_template("about.html")
+    if request.method == "GET":
+        return render_template("about.html")
+    elif request.method == "POST":
+        contact_name = request.form.get("contact-name")
+        contact_email = request.form.get("contact-email")
+        contact_message = request.form.get("contact-message")
 
-	
-	
-@app.route("/porfolio")
-def porfolio():
-	return render_template("porfolio.html")
-	
-	
-	
-	
-	
+        print(contact_name)
+        print(contact_email)
+        print(contact_message)
 
-app.run()
+        return render_template("success.html")
+
+
+if __name__ == '__main__':
+    app.run(debug=True)  # if you use the port parameter, delete it before deploying to Heroku
