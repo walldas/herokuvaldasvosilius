@@ -1,3 +1,86 @@
 body {
-    background-color: lightblue;
+    background-color: #e9ebee;
+	font-family: 'Raleway', sans-serif;
+	font-family: 'Lato', sans-serif;
 }
+
+.img-flex{
+	width:100%;
+}
+
+.navbar{
+	margin-bottom:0px !important ;
+}
+
+.page{
+		padding: 20px;
+		/*border: 1px solid rgba(255,55,255,0.6);*/
+		margin:20px auto;
+		border-radius: 5px;
+		background-color: white;
+	
+}
+
+.shadow-lg{
+	padding:20px;
+	border-radius: 5px;
+}
+
+.blog-logoa img {
+	max-height: 250px;
+	width: auto;
+	max-width: 100%;
+	height: auto;
+	/*padding-left: 20%;*/
+}
+
+.top-image{
+	
+	bottom: 0px;
+	padding: 100px 0;
+	background: no-repeat center;
+	background-size: cover;
+	-moz-background-size: cover;
+	-webkit-background-size: cover;
+}
+
+
+.bg_dark{
+	background-color:#1D1D1D;
+}
+
+.bg_dark>a{
+	color:rgba(255,255,255,0.5);
+	padding:10px;
+}
+
+.bg_dark>a:hover{
+	background-color:#1D1D1D;
+	color:rgba(255,255,255,1);
+}
+
+.footer {
+	color:rgba(255,255,255,0.5);
+	padding:20px 0px 30px 0px;
+}
+.footer a{
+	color:rgba(255,255,255,0.5);
+	text-decoration: none;
+}
+.footer .container{
+	border-top: 1px solid rgba(255,255,255,0.5);
+	padding:20px 0px ;
+}
+
+.bgred{
+	background-color: red;
+}
+
+.bgblue{
+	background-color: blue;
+}
+
+
+
+
+
