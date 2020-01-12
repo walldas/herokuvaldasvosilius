@@ -72,15 +72,20 @@ body {
 	padding:20px 0px ;
 }
 
-.bgred{
+.bg_red{
 	background-color: red;
 }
 
-.bgblue{
-	background-color: blue;
+.bg_green{
+	background-color: green;
 }
 
 
-
+.mini_btn{
+	padding:1px;
+	border-radius: 50%;
+	text-decoration: none;
+	color:white;
+}
 
 

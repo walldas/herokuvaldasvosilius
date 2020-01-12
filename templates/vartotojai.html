@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+
+{% block head%}Vartotojai{% endblock %}
+
+
+
+
+{% block page%}
+
+	<div class = "row justify-content-lg-center">
+		<div class = "col-lg-12 page">
+		<table class="table table-striped">
+			<tr>
+				<th scope="col">Laikas</th>
+				<th scope="col">Lygis</th>
+				<th scope="col">Vardas</th>
+				<th scope="col">Pavardė</th>
+				<th scope="col">E-Paštas</th>
+				<th scope="col">Telefonas</th>
+				<th scope="col">Kontaktuose</th>
+				<th scope="col">Papildoma informacija</th>
+				<th scope="col">Veiksmai</th>
+			
+			</tr>
+			{% for user in users %}
+				<tr>
+				{% set date = user.date_created.strftime('%Y-%m-%d %H:%M:%S') %}
+					<td>{{date}}</td>
+					<td>
+						{% if user.confirmed == "True" and user.lvl > 0%}
+							<a href="/down_user/{{user.id}}" class="mini_btn bg_red"> <b>-</b> </a>
+						{% endif %}
+						
+							{{user.lvl}}
+						{% if user.confirmed == "True" %}
+							<a href="/up_user/{{user.id}}" class="mini_btn bg_green"> <b>+</b> </a>
+						{% endif %}	
+					
+					</td>
+					<td>{{user.name}}</td>
+					<td>{{user.surname}}</td>
+					<td>{{user.email}}</td>
+					<td>{{user.phone}}</td>
+					<td> 
+						{% if user.confirmed == "True" %}
+								{% if user.show == "False" %}
+									<a href="/show_user/{{user.id}}" class="btn btn-warning"> rodyti </a>
+								{% else %}
+									<a href="/show_user/{{user.id}}" class="btn btn-dark"> slėpti </a>
+									
+								{% endif %}
+						{% else %}
+								<p> nepatvirtinta</p>
+						{% endif %}
+						
+					</td>
+					<td>{{user.info}}</td>
+					<td> 
+
+						<a href="/edit_user/{{user.id}}" class="btn btn-success"> redaguoti <i class="fa fa-pencil-alt"></i></a>
+						<a href="/delete_user/{{user.id}}" class="btn btn-danger"> ištrinti <i class="fas fa-trash-alt"></i></a>
+						{% if user.confirmed == "False" %}
+							<a href="/confirm_user/{{user.id}}" class="btn btn-primary"> patvirtinti </a>
+						{% endif %}
+						
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+		</div>
+	</div>
+
+
+
+
+
+{% endblock %}

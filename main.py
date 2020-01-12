@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime,date
 import os
 import hashlib
 import random
@@ -25,6 +25,7 @@ class User(db.Model):
 	image = db.Column(db.String(300), default="")
 	info = db.Column(db.String(1000), default="")
 	show = db.Column(db.String(10), default="False")
+	confirmed = db.Column(db.String(10), default="False")
 
 if not os.path.exists(app.config['SQLALCHEMY_DATABASE_URI']):
 	print(app.config['SQLALCHEMY_DATABASE_URI'])
@@ -48,11 +49,10 @@ def index():
 	
 
 @app.route("/registracija/", methods=["POST","GET"])
-
 def registration():
 	if request.method == 'POST':
-		print("="*20)
-		print(request.form)
+		#print("="*20)
+		#print(request.form)
 		user = User()
 		user.name = request.form.get('user_name')
 		user.surname = request.form['surname']
@@ -65,6 +65,7 @@ def registration():
 		#user.image = format(request.form['image'])
 		user.info = request.form['info']
 		user.show = "False"
+		user.confirmed = "False"
 		try:
 			db.session.add(user)
 			db.session.commit()
@@ -77,17 +78,99 @@ def registration():
 	else:
 		return render_template("registration.html")
 		
+
 		
+		
+@app.route("/vartotojai/", methods=["POST","GET"])
+def control_users():
+	users = reversed(User.query.order_by(User.date_created).all())
+	return render_template("vartotojai.html", users=users)
+	
+	
+@app.route('/confirm_user/<int:id>')
+def confirm_user(id):
+	user = User.query.get_or_404(id)
+	user.confirmed = "True"
+	user.lvl = 1
+	try:
+		db.session.commit()
+		return redirect('/vartotojai/')
+	except:
+		return 'problema patvirtinant vartotoja'
+	
 
+@app.route('/show_user/<int:id>')
+def show_user(id):
+	user = User.query.get_or_404(id)
+	if user.show == "False":
+		user.show = "True"
+	else:
+		user.show = "False"
+	try:
+		db.session.commit()
+		return redirect('/vartotojai/')
+	except:
+		return 'problema suteikiant vartotojuj rodymo statusa'
+	
+	
+@app.route('/delete_user/<int:id>')
+def delete_user(id):
+	user = User.query.get_or_404(id)
+	try:
+		db.session.delete(user)
+		db.session.commit()
+		return redirect('/vartotojai/')
+	except:
+		return 'problema trinant vartotoja'
 
+		
+@app.route("/edit_user/<int:id>", methods=["GET", "POST"])
+def edit_user(id):
+	user = User.query.get_or_404(id)
+	if request.method == "POST":
+		#user.content = request.form['content']
+		user.name = request.form.get('user_name')
+		user.surname = request.form['surname']
+		user.phone = request.form['phone']
+		user.email = request.form['email']
+		user.lvl = 0
+		password = request.form['password']
+		user.password = hashlib.sha256(password.encode()).hexdigest()
+		passwordr = request.form['passwordr']
+		#user.image = format(request.form['image'])
+		user.info = request.form['info']
+		user.show = "False"
+		try:
+			db.session.commit()
+			return redirect('/vartotojai/')
+		except:
+			return "nepavyko atnaujinti"
+	else:
+		return render_template("profilis.html",user=user)
 
 	
 	
 	
 	
+@app.route('/down_user/<int:id>')
+def down_user(id):
+	user = User.query.get_or_404(id)
+	user.lvl -= 1
+	try:
+		db.session.commit()
+		return redirect('/vartotojai/')
+	except:
+		return 'problema mazinant vartotojo lvl'
 	
-	
-	
+@app.route('/up_user/<int:id>')
+def up_user(id):
+	user = User.query.get_or_404(id)
+	user.lvl += 1
+	try:
+		db.session.commit()
+		return redirect('/vartotojai/')
+	except:
+		return 'problema didinant vartotojo lvl'
 	
 	
 	
