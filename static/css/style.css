@@ -21,6 +21,13 @@ body {
 	
 }
 
+
+.empty_page{
+		padding: 20px;
+		margin:20px auto;
+		border-radius: 5px;
+}
+
 .shadow-lg{
 	padding:20px;
 	border-radius: 5px;
@@ -44,6 +51,14 @@ body {
 	-webkit-background-size: cover;
 }
 
+.my_hr { 
+	display: block; 
+	height: 1px;
+    border: 0; 
+	border-top: 1px solid #1D1D1D;
+    margin: 1em 0; 
+	padding: 0; 
+	}
 
 .bg_dark{
 	background-color:#1D1D1D;
@@ -88,4 +103,7 @@ body {
 	color:white;
 }
 
+.card_{
+	margin: 5px ! important;
+}
 
