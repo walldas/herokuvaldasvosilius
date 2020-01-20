@@ -14,28 +14,15 @@
 <div class = "row">
 	<div class= " col-lg-6 page" >
 		
-		<a href="" class="btn btn-success pull-right"> redaguoti</a>
-
-		UAB „LPD“<br>
-		<br>
-		Mūšos g. 99, Aukštikalnių k., LT-39103, Pasvalio r. sav., Lietuva<br>
-		Tel. +37045134544, Faks. +37045153244<br>
-		<br>
-		DARBO LAIKAS<br>
-		I-V 08.00 – 12.00 val., 12.45 – 17.00 val.<br>
-		V 08.00 – 12.00 val., 12.45 – 15.45 val.<br>
-		Pietų pertrauka 12.00 – 12.45 val.<br>
-		VI-VII nedirbama<br>
-		<br>
-		Įmonės kodas 30234090<br>
-		PVM mokėtojo kodas LT100004441010<br>
-		<br>
-		Atsiskaitomosios sąskaitos Nr. LT23 7022 0672 0474 2729<br>
-		AB SEB bankas, banko kodas 9999<br>
-
-
-
-
+		<a href="/edit_contact_info/{{contact_main.id}}" class="btn btn-success pull-right"> redaguoti</a>
+		
+		{% set arr = contact_main.info.split('\n') %}
+		
+		{% for line in arr %}
+		
+			{{line}}<br>
+		
+		{% endfor %}
 	</div>
 </div>
 
@@ -83,7 +70,7 @@
 					<div class="form-group">
 						<label for="firstName" class="col-md-3 control-label">Vardas Pavardė*</label>
 						<div class="col-md-9">
-							<input type="text" id="user_name"  class="form-control"  name="user_name" >
+							<input type="text" id="name"  class="form-control"  name="name" >
 						</div>
 					</div>
 					

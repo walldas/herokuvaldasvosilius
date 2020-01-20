@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+
+{% block head%}Prisijungimas{% endblock %}
+
+
+
+
+{% block page%}
+
+<div class = "row justify-content-md-center">
+	<div class = "col-lg-9 shadow-sm page">
+		
+		<h2>Prisijungimas</h2><hr>
+		
+
+		
+		<form class="form-horizontal  " role="form"  method="POST" >
+		  
+		  
+		  
+		  
+			<div class="form-group">
+                    <label for="firstName" class="col-md-3 control-label">E-paštas</label>
+                    <div class="col-md-6">
+                        <input type="text" id="login"  class="form-control" autofocus="" name="login">
+                    </div>
+            </div>
+		  
+			<div class="form-group">
+                    <label for="firstName" class="col-md-3 control-label">Slaptažodis</label>
+                    <div class="col-md-6">
+                        <input type="password" id="password"  class="form-control" name="password">
+                    </div>
+            </div>
+		  
+		  
+		  
+		  
+		  
+		  <div class="form-group">
+		   <label class="col-md-4 control-label" for="singlebutton"></label>
+			   <div class="col-md-4 center-block">
+				  
+				   <input type="submit" value="Prisijungti" class="btn btn-success btn-block  center-block">
+			   </div>  
+		</div>
+		  
+		  
+		</form>
+
+		
+
+	</div>
+</div>
+
+
+
+{% endblock %}

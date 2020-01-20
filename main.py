@@ -98,20 +98,18 @@ def registration():
 		return render_template("registration.html")
 		
 
-@app.route("/kontaktai/", methods=["POST","GET"])
-def contacts_of_users():
-	users_ = reversed(User.query.order_by(User.date_created).all())
-	users = []
-	for user in users_:
-		if user.show == "True":
-			users.append(user)
-	return render_template("kontaktai.html", users=users)
 	
-		
 @app.route("/vartotojai/", methods=["POST","GET"])
 def control_users():
 	users = reversed(User.query.order_by(User.date_created).all())
 	return render_template("vartotojai.html", users=users)
+	
+
+	
+@app.route("/sms/")
+def messages_users():
+	messages_ = list(reversed(Messages.query.order_by(Messages.date_created).all()))
+	return render_template("sms.html", messages=messages_)
 	
 	
 @app.route('/confirm_user/<int:id>')
@@ -204,17 +202,74 @@ def up_user(id):
 	
 	
 	
+@app.route('/remove_message/<int:id>')
+def remove_message(id):
+	message = Messages.query.get_or_404(id)
+	try:
+		db.session.delete(message)
+		db.session.commit()
+		return redirect('/sms/')
+	except:
+		return 'problema trinant zinute'
+
+	
+@app.route("/kontaktai/", methods=["POST","GET"])
+def contacts_of_users():
+	if request.method == 'POST':
+		message = Messages()
+		message.name = request.form['name']
+		message.email = request.form['email']
+		message.sms = request.form['message']
+		db.session.add(message)
+		db.session.commit()
+		return render_template("zinute_priimta.html")
+	else:
+		users_ = reversed(User.query.order_by(User.date_created).all())
+		users = []
+		
+		try:
+			contact_main = Contact_text.query.get_or_404(1)
+		except:
+			contact_main = Contact_text()
+			contact_main.info = "Kontaktai pilnai neužpildyti"
+			contact_main.info_en = "Main info need to fill"
+			db.session.set(contact_main)
+			db.session.commit()
+		
+		
+		for user in users_:
+			if user.show == "True":
+				users.append(user)
+		return render_template("kontaktai.html", users=users, contact_main=contact_main)
 	
 	
 	
 	
+@app.route("/edit_contact_info/<int:id>", methods=["GET", "POST"])
+def edit_contact_info(id):
+	main_info = Contact_text.query.get_or_404(id)
+	if request.method == "POST":
+		
+		main_info.info = request.form['info']
+		main_info.info_en = request.form['info_en']
+		
+		
+		try:
+			db.session.commit()
+			return redirect('/kontaktai/')
+		except:
+			return "nepavyko atnaujinti"
+	else:
+		
+		return render_template("redaguoti_kontaktus.html",contact_main=main_info)
 	
 	
 	
 	
+@app.route("/prisijungti/")
+def prisijungimas():
 	
-	
-	
+	return render_template("login.html")
 	
 	
 	
