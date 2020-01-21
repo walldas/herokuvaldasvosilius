@@ -16,24 +16,26 @@
 
 <div class= "empty_page">
 		<div class = "row justify-content-md-center card_">
-		{% if messages|length == 0%}
-				<div class = "col-md-3 page shadow-sm card_">
-					<p> Rodomu vartotojų kontaktų sąrašas tuščias</p>
-				</div>
-		{% else %}
-		
-			{% for message in messages %}
-				<div class = "col-md-9 page shadow-sm card_">
-					<p><b>{{message.name}}</b> {{message.email}} <a href="/remove_message/{{message.id}}" class="btn btn-danger pull-right"> ištrinti </a></p>
+		{% if current_user.lvl == 2%}
+			{% if messages|length == 0%}
+					<div class = "col-md-3 page shadow-sm card_">
+						<p> Rodomu vartotojų kontaktų sąrašas tuščias</p>
+					</div>
+			{% else %}
+			
+				{% for message in messages %}
+					<div class = "col-md-9 page shadow-sm card_">
+						<p><b>{{message.name}}</b> {{message.email}} <a href="/remove_message/{{message.id}}" class="btn btn-danger pull-right"> ištrinti </a></p>
+							
+						<hr>
 						
-					<hr>
-					
-					<p> {{ message.sms }}</p>
-					{% set date = message.date_created.strftime('%Y-%m-%d %H:%M') %}
-					<span class="pull-right"><small>{{ date }}</small></span>
-				</div>
-			{% endfor %}
-		
+						<p> {{ message.sms }}</p>
+						{% set date = message.date_created.strftime('%Y-%m-%d %H:%M') %}
+						<span class="pull-right"><small>{{ date }}</small></span>
+					</div>
+				{% endfor %}
+			
+			{% endif %}
 		{% endif %}
 	
 	</div>

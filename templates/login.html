@@ -23,14 +23,14 @@
 			<div class="form-group">
                     <label for="firstName" class="col-md-3 control-label">E-paštas</label>
                     <div class="col-md-6">
-                        <input type="text" id="login"  class="form-control" autofocus="" name="login">
+                        <input type="text" id="login"  class="form-control"  name="login" value="{{email}}" {{fokus}}>
                     </div>
             </div>
 		  
 			<div class="form-group">
                     <label for="firstName" class="col-md-3 control-label">Slaptažodis</label>
                     <div class="col-md-6">
-                        <input type="password" id="password"  class="form-control" name="password">
+                        <input type="password" id="password"  class="form-control" name="password" autofocus="">
                     </div>
             </div>
 		  
@@ -45,6 +45,8 @@
 				   <input type="submit" value="Prisijungti" class="btn btn-success btn-block  center-block">
 			   </div>  
 		</div>
+		
+		<p class="text-center"><b>{{message}}</b></p>
 		  
 		  
 		</form>

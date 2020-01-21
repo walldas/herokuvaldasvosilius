@@ -71,7 +71,7 @@
 	  <li class="nav-item">
         <a class="nav-link" href="/kontaktai/">Kontaktai</a>
       </li>
-	  
+	  {% if current_user.lvl > 0 %}
       <li class="nav-item dropdown ">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           LDP nariams
@@ -82,23 +82,40 @@
           <a class="dropdown-item" href="#">EPS</a>
         </div>
       </li>
+	  {% endif %}
+	  {% if current_user.lvl == 0 %}
 	  <li class="nav-item">
         <a class="nav-link" href="/registracija/">Registruotis</a>
       </li>
 	  <li class="nav-item">
         <a class="nav-link" href="/prisijungti/">Prisijungti</a>
       </li>
+	  {% endif %}
+	  {% if current_user.lvl > 0 %}
 	  <li class="nav-item">
-        <a class="nav-link" href="#">Profilis</a>
+        <a class="nav-link" href="/edit_user/{{current_user.id}}">Profilis</a>
       </li>
+	  
+	  
 	  <li class="nav-item">
         <a class="nav-link" href="/logout/">Atsijungti</a>
       </li>
+	  {% endif %}
+	  
+	  {% if current_user.lvl == 2 %}
+	  
 	  <li class="nav-item">
         <a class="nav-link" href="/vartotojai/">Vartotojai</a>
       </li>
+	  
+	  
 	  <li class="nav-item">
         <a class="nav-link" href="/sms/">Žinutės</a>
+      </li>
+	  {% endif %}
+	  
+	   <li class="nav-item">
+        <a class="nav-link" href="#" style="color:yellow">{{current_user.name}}</a>
       </li>
     </ul>
   </div>

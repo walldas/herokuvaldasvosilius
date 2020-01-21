@@ -10,6 +10,9 @@
 
 	<div class = "row justify-content-lg-center">
 		<div class = "col-lg-12 page">
+		{% if current_user.lvl == 2 %}
+		
+		
 		<table class="table table-striped">
 			<tr>
 				<th scope="col">Laikas</th>
@@ -68,6 +71,13 @@
 				</tr>
 			{% endfor %}
 		</table>
+		{% else %}
+		error 404
+		{% endif %}
+		
+		
+		
+		
 		</div>
 	</div>
 

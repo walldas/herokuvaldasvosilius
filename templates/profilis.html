@@ -9,6 +9,7 @@
 {% block page%}
 <div class = "row justify-content-md-center">
 <div class = "col-lg-5 shadow-sm page">
+	{% if current_user.lvl > 0 and current_user.email == user.email or current_user.lvl == 2%}
 	<form class="form-horizontal  " role="form"  method="POST" >
                 <h2>Profilis</h2><hr>
 
@@ -87,8 +88,9 @@
 				</div>
             </form>
 	
-	
-	
+	{% else %}
+		error 404
+	{% endif %}
 </div>
 </div>
 

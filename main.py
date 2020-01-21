@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect,make_response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime,date
 import os
@@ -27,6 +27,7 @@ class User(db.Model):
 	info_en = db.Column(db.String(1000), default="")
 	show = db.Column(db.String(10), default="False")
 	confirmed = db.Column(db.String(10), default="False")
+	session_token = db.Column(db.String, default="")
 	
 	
 	
@@ -47,24 +48,94 @@ class Messages(db.Model):
 if not os.path.exists(app.config['SQLALCHEMY_DATABASE_URI']):
 	print(app.config['SQLALCHEMY_DATABASE_URI'])
 	db.create_all()
+	super_admin = User()
+	super_admin.name = "SuperAdmin"
+	super_admin.surname = "SuperAdmin"
+	super_admin.phone = 88888888
+	super_admin.email = "admin@demo.lt"
+	super_admin.lvl = 2
+	password = "demo"
+	super_admin.password = hashlib.sha256(password.encode()).hexdigest()
+	super_admin.info = "Pradinis administratorius"
+	super_admin.show = "False"
+	super_admin.confirmed = "True"
+	db.session.add(super_admin)
+	db.session.commit()
 	
+def guest_user():
+	current_user = User()
+	current_user.name="Guest"
+	current_user.surname="Svecias"
+	current_user.email="gg@gg.gg"
+	current_user.lvl=0
+	current_user.id=-1
+	return current_user
+	
+def current_user():
+	email = request.cookies.get("current-user-email")
+	print(">"*20)
+	print(request.cookies)
+	print(">"*20)
+	current_user = User.query.filter_by(email=email).first()
+	if current_user == None:
+		current_user = guest_user()
+	print(current_user.lvl)
+	return current_user
 
 
+		
+@app.route("/prisijungti/",  methods=["POST","GET"])
+def login():
+	message = ""
+	email=""
+	fokus ='autofocus=""'
+	if request.method == 'POST':
+		email = request.form.get("login")
+		password = request.form.get("password")
+		hashed_password = hashlib.sha256(password.encode()).hexdigest()
+		user = User.query.filter_by(email=email).first()		
+		if not user:
+			user = guest_user()
+			user.password = hashed_password
+
+		if hashed_password != user.password:
+			message =  "WRONG PASSWORD! / Klaidingas Slaptažodis"
+			return render_template("login.html", email = email, message = message,fokus="", current_user=current_user())
+			
+		elif hashed_password == user.password:
+			user.session_token = str(uuid.uuid4())
+			response = make_response(redirect(url_for('index')))
+			response.set_cookie("session-token", user.session_token)  #  consider adding httponly=True on production
+			response.set_cookie("current-user-name", user.name) 
+			response.set_cookie("current-user-lvl", str(user.lvl)) 
+			response.set_cookie("current-user-id", str(user.id)) 
+			response.set_cookie("current-user-email", str(user.email)) 
+			return response
+	else:
+		return render_template("login.html", email = email, message = message,fokus=fokus, current_user=current_user())
+		
+		
+@app.route("/logout/")
+def logout():
+	response = make_response(redirect(url_for('index')))
+	response.set_cookie('session-token', '', expires=0)
+	response.set_cookie('current-user-name', '', expires=0)
+	response.set_cookie('current-user-lvl', '', expires=0)
+	response.set_cookie('current-user-id', '', expires=0)
+	response.set_cookie('current-user-email', '', expires=0)
 	
+	return response
+	
+
 
 @app.route("/")
 def index():
-	session_token = request.cookies.get("session_token")
-	print(">"*20)
-	print(session_token)
-	print(">"*20)
-	if session_token:
-		#user = db.query(User).filter_by(session_token=session_token).first() # kas per
-		user = "Valdas"
-	else:
-		user = None
-
-	return render_template("index.html", user=user)
+	print("aaaaaaaaaaaaa")
+	user= current_user()
+	print(user.lvl)
+	print("aaaaaaaaaaaaa")
+	return render_template("index.html", current_user = current_user())
+	
 	
 
 @app.route("/registracija/", methods=["POST","GET"])
@@ -88,28 +159,28 @@ def registration():
 		try:
 			db.session.add(user)
 			db.session.commit()
-			return render_template("registration_sucess.html")
+			return render_template("registration_sucess.html", current_user=current_user())
 			return redirect('/')
 			
 		except:
 			
 			return 'buvo problema dedant i db'
 	else:
-		return render_template("registration.html")
+		return render_template("registration.html", current_user=current_user())
 		
 
 	
 @app.route("/vartotojai/", methods=["POST","GET"])
 def control_users():
 	users = reversed(User.query.order_by(User.date_created).all())
-	return render_template("vartotojai.html", users=users)
+	return render_template("vartotojai.html", users=users, current_user=current_user())
 	
 
 	
 @app.route("/sms/")
 def messages_users():
 	messages_ = list(reversed(Messages.query.order_by(Messages.date_created).all()))
-	return render_template("sms.html", messages=messages_)
+	return render_template("sms.html", messages=messages_, current_user=current_user())
 	
 	
 @app.route('/confirm_user/<int:id>')
@@ -171,7 +242,7 @@ def edit_user(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("profilis.html",user=user)
+		return render_template("profilis.html",user=user, current_user=current_user())
 
 	
 	
@@ -222,7 +293,7 @@ def contacts_of_users():
 		message.sms = request.form['message']
 		db.session.add(message)
 		db.session.commit()
-		return render_template("zinute_priimta.html")
+		return render_template("zinute_priimta.html", current_user=current_user())
 	else:
 		users_ = reversed(User.query.order_by(User.date_created).all())
 		users = []
@@ -233,14 +304,14 @@ def contacts_of_users():
 			contact_main = Contact_text()
 			contact_main.info = "Kontaktai pilnai neužpildyti"
 			contact_main.info_en = "Main info need to fill"
-			db.session.set(contact_main)
+			db.session.add(contact_main)
 			db.session.commit()
 		
 		
 		for user in users_:
 			if user.show == "True":
 				users.append(user)
-		return render_template("kontaktai.html", users=users, contact_main=contact_main)
+		return render_template("kontaktai.html", users=users, contact_main=contact_main, current_user=current_user())
 	
 	
 	
@@ -261,15 +332,12 @@ def edit_contact_info(id):
 			return "nepavyko atnaujinti"
 	else:
 		
-		return render_template("redaguoti_kontaktus.html",contact_main=main_info)
+		return render_template("redaguoti_kontaktus.html",contact_main=main_info, current_user=current_user())
 	
 	
 	
 	
-@app.route("/prisijungti/")
-def prisijungimas():
-	
-	return render_template("login.html")
+
 	
 	
 	
