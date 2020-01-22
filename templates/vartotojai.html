@@ -28,16 +28,27 @@
 			</tr>
 			{% for user in users %}
 				<tr>
-				{% set date = user.date_created.strftime('%Y-%m-%d %H:%M:%S') %}
+				<!--{% set date = user.date_created.strftime('%Y-%m-%d %H:%M:%S') %}-->
+				{% set date = user.date_created.strftime('%Y-%m-%d') %}
 					<td>{{date}}</td>
 					<td>
 						{% if user.confirmed == "True" and user.lvl > 0%}
-							<a href="/down_user/{{user.id}}" class="mini_btn bg_red"> <b>-</b> </a>
+							<a href="/down_user/{{user.id}}" class="mini_btn bg_red"> <b> - </b> </a>
 						{% endif %}
 						
-							{{user.lvl}}
-						{% if user.confirmed == "True" %}
-							<a href="/up_user/{{user.id}}" class="mini_btn bg_green"> <b>+</b> </a>
+							
+							{% if user.lvl == 0 %}
+								&nbsp Svečias
+							{% elif user.lvl == 1 %}
+								&nbsp Narys
+							{% elif user.lvl == 2 %}
+								&nbsp Adminas
+							{% endif %}
+							
+							
+							
+						{% if user.confirmed == "True" and user.lvl < 2 %}
+							<a href="/up_user/{{user.id}}" class="mini_btn bg_green"> <b> + </b> </a>
 						{% endif %}	
 					
 					</td>

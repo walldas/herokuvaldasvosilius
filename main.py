@@ -46,21 +46,23 @@ class Messages(db.Model):
 	
 	
 if not os.path.exists(app.config['SQLALCHEMY_DATABASE_URI']):
-	print(app.config['SQLALCHEMY_DATABASE_URI'])
+	#print(app.config['SQLALCHEMY_DATABASE_URI'])
 	db.create_all()
-	super_admin = User()
-	super_admin.name = "SuperAdmin"
-	super_admin.surname = "SuperAdmin"
-	super_admin.phone = 88888888
-	super_admin.email = "admin@demo.lt"
-	super_admin.lvl = 2
-	password = "demo"
-	super_admin.password = hashlib.sha256(password.encode()).hexdigest()
-	super_admin.info = "Pradinis administratorius"
-	super_admin.show = "False"
-	super_admin.confirmed = "True"
-	db.session.add(super_admin)
-	db.session.commit()
+	users_ = list(User.query.all())
+	if len(users_)== 0:
+		super_admin = User()
+		super_admin.name = "SuperAdmin"
+		super_admin.surname = "SuperAdmin"
+		super_admin.phone = 88888888
+		super_admin.email = "admin@demo.lt"
+		super_admin.lvl = 2
+		password = "demo"
+		super_admin.password = hashlib.sha256(password.encode()).hexdigest()
+		super_admin.info = "Pradinis administratorius"
+		super_admin.show = "False"
+		super_admin.confirmed = "True"
+		db.session.add(super_admin)
+		db.session.commit()
 	
 def guest_user():
 	current_user = User()
@@ -73,13 +75,9 @@ def guest_user():
 	
 def current_user():
 	email = request.cookies.get("current-user-email")
-	print(">"*20)
-	print(request.cookies)
-	print(">"*20)
 	current_user = User.query.filter_by(email=email).first()
 	if current_user == None:
 		current_user = guest_user()
-	print(current_user.lvl)
 	return current_user
 
 
@@ -130,10 +128,6 @@ def logout():
 
 @app.route("/")
 def index():
-	print("aaaaaaaaaaaaa")
-	user= current_user()
-	print(user.lvl)
-	print("aaaaaaaaaaaaa")
 	return render_template("index.html", current_user = current_user())
 	
 	
@@ -141,8 +135,6 @@ def index():
 @app.route("/registracija/", methods=["POST","GET"])
 def registration():
 	if request.method == 'POST':
-		#print("="*20)
-		#print(request.form)
 		user = User()
 		user.name = request.form.get('user_name')
 		user.surname = request.form['surname']
@@ -160,7 +152,6 @@ def registration():
 			db.session.add(user)
 			db.session.commit()
 			return render_template("registration_sucess.html", current_user=current_user())
-			return redirect('/')
 			
 		except:
 			
@@ -224,7 +215,6 @@ def delete_user(id):
 def edit_user(id):
 	user = User.query.get_or_404(id)
 	if request.method == "POST":
-		#user.content = request.form['content']
 		user.name = request.form.get('user_name')
 		user.surname = request.form['surname']
 		user.phone = request.form['phone']
@@ -320,18 +310,14 @@ def contacts_of_users():
 def edit_contact_info(id):
 	main_info = Contact_text.query.get_or_404(id)
 	if request.method == "POST":
-		
 		main_info.info = request.form['info']
 		main_info.info_en = request.form['info_en']
-		
-		
 		try:
 			db.session.commit()
 			return redirect('/kontaktai/')
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		
 		return render_template("redaguoti_kontaktus.html",contact_main=main_info, current_user=current_user())
 	
 	

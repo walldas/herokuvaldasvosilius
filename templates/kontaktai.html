@@ -13,9 +13,9 @@
 <hr class="my_hr">
 <div class = "row">
 	<div class= " col-lg-6 page" >
-		
+		{% if current_user.lvl == 2 %}
 		<a href="/edit_contact_info/{{contact_main.id}}" class="btn btn-success pull-right"> redaguoti</a>
-		
+		{% endif %}
 		{% set arr = contact_main.info.split('\n') %}
 		
 		{% for line in arr %}
