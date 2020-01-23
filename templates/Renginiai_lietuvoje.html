@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block head%}Renginiai Lietuvoje{% endblock %}
+{% block page%}
+<h2> Renginiai Lietuvoje</h2>
+<hr class="my_hr">
+	<div class= "empty_page">
+		<div class = "row justify-content-md-center card_">
+			{% if current_user.lvl == 2 %}
+				<div class = "col-md-8 ">
+					<a href="/create_event/" class= "btn btn-warning" > Pridėti renginį</a> 
+				</div>
+			{% endif %}
+			{% if events|length == 0%}
+				<div class = "col-md-8 page shadow-sm card_">
+					<p> Renginių sąrašas tuščias</p>
+				</div>
+			{% else %}
+				{% for event in events %}
+					{% if event.title|length > 0%}
+						<div class = "col-md-8 page shadow-sm card_">
+							<b><big>{{event.title}}</big></b><hr>
+							<p>{{event.date}} - {{event.location}}
+								{% if current_user.lvl == 2 %}
+									<span class="pull-right">
+										<a href="/edit_event/{{event.id}}" class="btn btn-success"> redaguoti </a>
+										<a href="/delete_event/{{event.id}}" class="btn btn-danger"> ištrinti </a>
+									</span>
+								{% endif %}
+							</p>
+							
+						</div>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+
+{% endblock %}

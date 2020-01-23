@@ -49,9 +49,9 @@
           Renginiai
         </a>
         <div class="dropdown-menu bg_dark" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Naujienos</a>
-          <a class="dropdown-item" href="#">Renginiai Lietuvoje</a>
-          <a class="dropdown-item" href="#">Tarptautiniai renginiai</a>
+          <a class="dropdown-item" href="/Naujienos/">Naujienos</a>
+          <a class="dropdown-item" href="/Renginiai_lietuvoje/">Renginiai Lietuvoje</a>
+          <a class="dropdown-item" href="/Tarptautiniai_renginiai/">Tarptautiniai renginiai</a>
         </div>
       </li>
       
@@ -77,13 +77,13 @@
           LDP nariams
         </a>
         <div class="dropdown-menu bg_dark" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Dokumentai</a>
+          <a class="dropdown-item" href="/dokumentai/">Dokumentai</a>
           <a class="dropdown-item" href="#">Galerija</a>
           <a class="dropdown-item" href="#">EPS</a>
         </div>
       </li>
 	  {% endif %}
-	  {% if current_user.lvl == 0 %}
+	  {% if current_user.lvl == 0  and current_user.name|length <= 1 %}
 	  <li class="nav-item">
         <a class="nav-link" href="/registracija/">Registruotis</a>
       </li>
@@ -91,7 +91,7 @@
         <a class="nav-link" href="/prisijungti/">Prisijungti</a>
       </li>
 	  {% endif %}
-	  {% if current_user.lvl > 0 %}
+	  {% if current_user.lvl > 0 or current_user.name|length > 1 %}
 	  <li class="nav-item">
         <a class="nav-link" href="/edit_user/{{current_user.id}}">Profilis</a>
       </li>

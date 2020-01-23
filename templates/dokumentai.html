@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+
+{% block head%}Dokumentai{% endblock %}
+
+
+
+
+{% block page%}
+<div class = "row justify-content-md-center">
+<div class = "col-lg-12 shadow-sm page">
+{% if current_user.lvl > 0%}
+	
+
+
+	<form class="form-horizontal  " role="form"  method="POST" >
+                <h2>Dokumentai</h2><hr>
+
+                
+				
+					
+					<div class="form-group">
+						<label for="photo" class="col-md-2 control-label">Dokumentas</label>
+						<div class="col-md-4">
+							<input type="file" id="file" name="file"  class="form-control-file">
+							
+						</div>
+						<div class="col-md-4">
+							<input type="submit" value="Pridėti dokumentą" class="btn btn-success btn-block pull-right">
+						</div>
+					</div>
+					
+					
+               
+				
+				
+				</div>
+            </form>
+	
+	{% else %}
+	 error 404
+	{% endif %}
+</div>
+</div>
+
+{% endblock %}

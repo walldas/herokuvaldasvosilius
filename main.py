@@ -5,6 +5,7 @@ import os
 import hashlib
 import random
 import uuid
+#from flask_uploads 
 #from models import User, db #susitvarkyti
 
 
@@ -44,6 +45,44 @@ class Messages(db.Model):
 	email = db.Column(db.String(200), nullable=False)
 	sms = db.Column(db.String(4000), default="")
 	
+
+class Document(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	name = db.Column(db.String(4000), default="")
+	
+
+	
+class News(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	title = db.Column(db.String(4000), default="")
+	title_en = db.Column(db.String(4000), default="")
+	date = db.Column(db.String(4000), default="")
+	location = db.Column(db.String(4000), default="")
+	
+	
+class News_in_LT(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	title = db.Column(db.String(4000), default="")
+	title_en = db.Column(db.String(4000), default="")
+	date = db.Column(db.String(4000), default="")
+	location = db.Column(db.String(4000), default="")
+	
+
+class News_in_World(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	title = db.Column(db.String(4000), default="")
+	title_en = db.Column(db.String(4000), default="")
+	date = db.Column(db.String(4000), default="")
+	location = db.Column(db.String(4000), default="")
+	
+	
+	
+	
+	
 	
 if not os.path.exists(app.config['SQLALCHEMY_DATABASE_URI']):
 	#print(app.config['SQLALCHEMY_DATABASE_URI'])
@@ -66,7 +105,7 @@ if not os.path.exists(app.config['SQLALCHEMY_DATABASE_URI']):
 	
 def guest_user():
 	current_user = User()
-	current_user.name="Guest"
+	current_user.name="G"
 	current_user.surname="Svecias"
 	current_user.email="gg@gg.gg"
 	current_user.lvl=0
@@ -143,7 +182,7 @@ def registration():
 		user.lvl = 0
 		password = request.form['password']
 		user.password = hashlib.sha256(password.encode()).hexdigest()
-		passwordr = request.form['passwordr']
+		#passwordr = request.form['passwordr']
 		#user.image = format(request.form['image'])
 		user.info = request.form['info']
 		user.show = "False"
@@ -222,7 +261,7 @@ def edit_user(id):
 		#user.lvl = 0
 		password = request.form['password']
 		user.password = hashlib.sha256(password.encode()).hexdigest()
-		passwordr = request.form['passwordr']
+		#passwordr = request.form['passwordr']
 		#user.image = format(request.form['image'])
 		user.info = request.form['info']
 		#user.show = "False"
@@ -323,7 +362,201 @@ def edit_contact_info(id):
 	
 	
 	
+@app.route("/dokumentai/", methods=["GET", "POST"])
+def documents():
+	if request.method == "POST":
+		return "file"
+	return render_template("dokumentai.html", current_user=current_user())
+	
+	
+	
+@app.route("/Naujienos/", methods=["GET", "POST"])
+def news():
+	news_ = list(reversed(News.query.order_by(News.date_created).all()))
+	return render_template("Naujienos.html",news = news_ , current_user=current_user())
+	
 
+@app.route("/create_news/", methods=["GET", "POST"])	
+def create_news():
+	new_ = News()
+	new_.title = ""
+	new_.title_en =""
+	new_.date =""
+	new_.location =""
+	if request.method == "POST":
+		new_.title = request.form['title']
+		new_.title_en = request.form['title_en']
+		new_.date = request.form['date']
+		new_.location = request.form['location']
+		try:
+			db.session.add(new_)
+			db.session.commit()
+			return redirect('/Naujienos/')
+		except:
+			return "nepavyko prideti naujienos i db"
+	else:
+		return render_template("Naujienos_create.html",new = new_, current_user=current_user())
+	
+	
+	
+@app.route("/edit_new/<int:id>", methods=["GET", "POST"])
+def edit_new(id):
+	new_ = News.query.get_or_404(id)
+	if request.method == "POST":
+		new_.title = request.form['title']
+		new_.title_en = request.form['title_en']
+		new_.date = request.form['date']
+		new_.location = request.form['location']
+		try:
+			db.session.commit()
+			return redirect('/Naujienos/')
+		except:
+			return "nepavyko atnaujinti"
+	else:
+		return render_template("Naujienos_create.html",new = new_, current_user=current_user())
+	
+	
+@app.route("/delete_new/<int:id>", methods=["GET", "POST"])
+def delete_new(id):
+	new_ = News.query.get_or_404(id)
+	try:
+		db.session.delete(new_)
+		db.session.commit()
+		return redirect('/Naujienos/')
+	except:
+		return 'problema trinant naujiena'
+	
+	
+# ================== events #=====================
+
+
+	
+@app.route("/Renginiai_lietuvoje/", methods=["GET", "POST"])
+def events():
+	events = list(reversed(News_in_LT.query.order_by(News_in_LT.date_created).all()))
+	return render_template("Renginiai_lietuvoje.html",events = events , current_user=current_user())
+	
+
+@app.route("/create_event/", methods=["GET", "POST"])	
+def create_event():
+	event = News_in_LT()
+	event.title = ""
+	event.title_en =""
+	event.date =""
+	event.location =""
+	if request.method == "POST":
+		event.title = request.form['title']
+		event.title_en = request.form['title_en']
+		event.date = request.form['date']
+		event.location = request.form['location']
+		try:
+			db.session.add(event)
+			db.session.commit()
+			return redirect('/Renginiai_lietuvoje/')
+		except:
+			return "nepavyko prideti naujienos i db"
+	else:
+		return render_template("Renginiai_lietuvoje_create.html",event = event, current_user=current_user())
+	
+	
+	
+@app.route("/edit_event/<int:id>", methods=["GET", "POST"])
+def edit_event(id):
+	event = News_in_LT.query.get_or_404(id)
+	if request.method == "POST":
+		event.title = request.form['title']
+		event.title_en = request.form['title_en']
+		event.date = request.form['date']
+		event.location = request.form['location']
+		try:
+			db.session.commit()
+			return redirect('/Renginiai_lietuvoje/')
+		except:
+			return "nepavyko atnaujinti"
+	else:
+		return render_template("Renginiai_lietuvoje_create.html",event = event, current_user=current_user())
+	
+	
+@app.route("/delete_event/<int:id>", methods=["GET", "POST"])
+def delete_event(id):
+	event = News_in_LT.query.get_or_404(id)
+	try:
+		db.session.delete(event)
+		db.session.commit()
+		return redirect('/Renginiai_lietuvoje/')
+	except:
+		return 'problema trinant naujiena'
+	
+	
+	
+	
+# ================== tarptautiniai events #=====================
+
+
+	
+@app.route("/Tarptautiniai_renginiai/", methods=["GET", "POST"])
+def tevents():
+	events = list(reversed(News_in_World.query.order_by(News_in_World.date_created).all()))
+	return render_template("Tartautiniai_renginiai.html",events = events , current_user=current_user())
+	
+
+@app.route("/create_tevent/", methods=["GET", "POST"])	
+def tcreate_event():
+	event = News_in_World()
+	event.title = ""
+	event.title_en =""
+	event.date =""
+	event.location =""
+	if request.method == "POST":
+		event.title = request.form['title']
+		event.title_en = request.form['title_en']
+		event.date = request.form['date']
+		event.location = request.form['location']
+		try:
+			db.session.add(event)
+			db.session.commit()
+			return redirect('/Tarptautiniai_renginiai/')
+		except:
+			return "nepavyko prideti naujienos i db"
+	else:
+		return render_template("Tartautiniai_renginiai_create.html",event = event, current_user=current_user())
+	
+	
+	
+@app.route("/edit_tevent/<int:id>", methods=["GET", "POST"])
+def tedit_event(id):
+	event = News_in_World.query.get_or_404(id)
+	if request.method == "POST":
+		event.title = request.form['title']
+		event.title_en = request.form['title_en']
+		event.date = request.form['date']
+		event.location = request.form['location']
+		try:
+			db.session.commit()
+			return redirect('/Tarptautiniai_renginiai/')
+		except:
+			return "nepavyko atnaujinti"
+	else:
+		return render_template("Tartautiniai_renginiai_create.html",event = event, current_user=current_user())
+	
+	
+@app.route("/delete_tevent/<int:id>", methods=["GET", "POST"])
+def tdelete_event(id):
+	event = News_in_World.query.get_or_404(id)
+	try:
+		db.session.delete(event)
+		db.session.commit()
+		return redirect('/Tarptautiniai_renginiai/')
+	except:
+		return 'problema trinant naujiena'
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

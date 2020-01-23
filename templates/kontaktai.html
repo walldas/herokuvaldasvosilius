@@ -49,11 +49,15 @@
 			{% for user in users %}
 				<div class = "col-md-3 page shadow-sm card_">
 					{% filter upper %}
-					<p><b>{{user.name}} {{user.surname}}</b></p><hr>
+						<p><b>{{user.name}} {{user.surname}}</b></p><hr>
 					{% endfilter %}
-					<p><i class="fa fa-info-circle"></i> {{user.info}}</p>
-					<p> <i class="fa fa-envelope"></i> {{user.email}}</p>
-					<p><i class="fa fa-phone"></i> {{user.phone}}</p>
+					{% if user.info|length > 0 %}
+						<p><i class="fa fa-info-circle"></i> {{user.info}}</p>
+					{% endif %}
+						<p> <i class="fa fa-envelope"></i> {{user.email}}</p>
+					{% if user.phone|length > 0 %}
+						<p><i class="fa fa-phone"></i> {{user.phone}}</p>
+					{% endif %}
 				</div>
 			{% endfor %}
 			{% endif %}

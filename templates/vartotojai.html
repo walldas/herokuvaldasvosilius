@@ -72,8 +72,8 @@
 					<td>{{user.info}}</td>
 					<td> 
 
-						<a href="/edit_user/{{user.id}}" class="btn btn-success"> redaguoti <i class="fa fa-pencil-alt"></i></a>
-						<a href="/delete_user/{{user.id}}" class="btn btn-danger"> ištrinti <i class="fas fa-trash-alt"></i></a>
+						<a href="/edit_user/{{user.id}}" class="btn btn-success"> redaguoti </a>
+						<a href="/delete_user/{{user.id}}" class="btn btn-danger"> ištrinti </a>
 						{% if user.confirmed == "False" %}
 							<a href="/confirm_user/{{user.id}}" class="btn btn-primary"> patvirtinti </a>
 						{% endif %}
