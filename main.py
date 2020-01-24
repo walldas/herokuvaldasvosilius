@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data_base.db'
 db = SQLAlchemy(app)
 
-
+#============================ Lentutes ============================
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	date_created = db.Column(db.DateTime, default=datetime.utcnow)
@@ -78,10 +78,38 @@ class News_in_World(db.Model):
 	title_en = db.Column(db.String(4000), default="")
 	date = db.Column(db.String(4000), default="")
 	location = db.Column(db.String(4000), default="")
+
+class History(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	text = db.Column(db.String(400000), default="")
+	text_en = db.Column(db.String(400000), default="")
 	
+class Officer(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	text = db.Column(db.String(400000), default="")
+	text_en = db.Column(db.String(400000), default="")
+
+class Comision(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	text = db.Column(db.String(400000), default="")
+	text_en = db.Column(db.String(400000), default="")
+#	
+class Recruit(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	text = db.Column(db.String(400000), default="")
+	text_en = db.Column(db.String(400000), default="")
 	
+class Purpose(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	text = db.Column(db.String(400000), default="")
+	text_en = db.Column(db.String(400000), default="")
 	
-	
+#============================ Duomenu Baze ============================	
 	
 	
 if not os.path.exists(app.config['SQLALCHEMY_DATABASE_URI']):
@@ -102,7 +130,11 @@ if not os.path.exists(app.config['SQLALCHEMY_DATABASE_URI']):
 		super_admin.confirmed = "True"
 		db.session.add(super_admin)
 		db.session.commit()
-	
+
+		
+		
+#============================ Base ============================
+		
 def guest_user():
 	current_user = User()
 	current_user.name="G"
@@ -169,7 +201,7 @@ def logout():
 def index():
 	return render_template("index.html", current_user = current_user())
 	
-	
+#============================ Registracija ============================
 
 @app.route("/registracija/", methods=["POST","GET"])
 def registration():
@@ -200,19 +232,22 @@ def registration():
 		
 
 	
-@app.route("/vartotojai/", methods=["POST","GET"])
-def control_users():
-	users = reversed(User.query.order_by(User.date_created).all())
-	return render_template("vartotojai.html", users=users, current_user=current_user())
-	
-
+#============================ Zinutes ============================
 	
 @app.route("/sms/")
 def messages_users():
 	messages_ = list(reversed(Messages.query.order_by(Messages.date_created).all()))
 	return render_template("sms.html", messages=messages_, current_user=current_user())
 	
+#============================ Vartotojai ============================
+
+@app.route("/vartotojai/", methods=["POST","GET"])
+def control_users():
+	users = reversed(User.query.order_by(User.date_created).all())
+	return render_template("vartotojai.html", users=users, current_user=current_user())
 	
+
+
 @app.route('/confirm_user/<int:id>')
 def confirm_user(id):
 	user = User.query.get_or_404(id)
@@ -313,6 +348,8 @@ def remove_message(id):
 		return 'problema trinant zinute'
 
 	
+#============================ kontaktai ============================
+	
 @app.route("/kontaktai/", methods=["POST","GET"])
 def contacts_of_users():
 	if request.method == 'POST':
@@ -360,7 +397,7 @@ def edit_contact_info(id):
 		return render_template("redaguoti_kontaktus.html",contact_main=main_info, current_user=current_user())
 	
 	
-	
+#============================ dokumentai ============================	
 	
 @app.route("/dokumentai/", methods=["GET", "POST"])
 def documents():
@@ -368,7 +405,7 @@ def documents():
 		return "file"
 	return render_template("dokumentai.html", current_user=current_user())
 	
-	
+#============================ naujienos ============================
 	
 @app.route("/Naujienos/", methods=["GET", "POST"])
 def news():
@@ -552,6 +589,187 @@ def tdelete_event(id):
 	
 	
 	
+#============================ History ============================
+	
+	
+	
+@app.route("/history/")
+def history():
+	try:
+		data = History.query.get_or_404(1)
+	except:
+		data = History()
+		data.text = "Teksto nėra adminas turi pridėti"
+		data.text_en = "Admin have to add text"
+		db.session.add(data)
+		db.session.commit()
+	data.text = data.text.replace(" ","&nbsp")
+	data.text_en = data.text_en.replace(" ","&nbsp")
+	return render_template("History.html", data=data, current_user=current_user())
+	
+
+@app.route("/edit_history/<int:id>", methods=["GET", "POST"])
+def edit_history(id):
+	data = History.query.get_or_404(id)
+	if request.method == "POST":
+		data.text = request.form['text']
+		data.text_en = request.form['text_en']
+		try:
+			db.session.commit()
+			return redirect('/history/')
+		except:
+			return "nepavyko atnaujinti"
+	else:
+		return render_template("APIE_create.html",data=data, current_user=current_user())
+	
+	
+	
+#============================ Officer ============================	
+	
+	
+@app.route("/officer/")
+def officer():
+	try:
+		data = Officer.query.get_or_404(1)
+	except:
+		data = Officer()
+		data.text = "Teksto nėra adminas turi pridėti"
+		data.text_en = "Admin have to add text"
+		db.session.add(data)
+		db.session.commit()
+	data.text = data.text.replace(" ","&nbsp")
+	data.text_en = data.text_en.replace(" ","&nbsp")
+	return render_template("Officer.html", data=data, current_user=current_user())
+	
+
+@app.route("/edit_officer/<int:id>", methods=["GET", "POST"])
+def edit_officer(id):
+	data = Officer.query.get_or_404(id)
+	if request.method == "POST":
+		data.text = request.form['text']
+		data.text_en = request.form['text_en']
+		try:
+			db.session.commit()
+			return redirect('/officer/')
+		except:
+			return "nepavyko atnaujinti"
+	else:
+		return render_template("APIE_create.html",data=data, current_user=current_user())
+	
+	
+
+	
+#============================ Comision ============================	
+	
+	
+@app.route("/comision/")
+def comision():
+	try:
+		data = Comision.query.get_or_404(1)
+	except:
+		data = Comision()
+		data.text = "Teksto nėra adminas turi pridėti"
+		data.text_en = "Admin have to add text"
+		db.session.add(data)
+		db.session.commit()
+	data.text = data.text.replace(" ","&nbsp")
+	data.text_en = data.text_en.replace(" ","&nbsp")
+	return render_template("Comision.html", data=data, current_user=current_user())
+	
+
+@app.route("/edit_comision/<int:id>", methods=["GET", "POST"])
+def edit_comision(id):
+	data = Comision.query.get_or_404(id)
+	if request.method == "POST":
+		data.text = request.form['text']
+		data.text_en = request.form['text_en']
+		try:
+			db.session.commit()
+			return redirect('/comision/')
+		except:
+			return "nepavyko atnaujinti"
+	else:
+		return render_template("APIE_create.html",data=data, current_user=current_user())
+	
+	
+	
+	
+
+	
+#============================ Recruit ============================	
+	
+	
+@app.route("/recruit/")
+def recruit():
+	try:
+		data = Recruit.query.get_or_404(1)
+	except:
+		data = Recruit()
+		data.text = "Teksto nėra adminas turi pridėti"
+		data.text_en = "Admin have to add text"
+		db.session.add(data)
+		db.session.commit()
+	data.text = data.text.replace(" ","&nbsp")
+	data.text_en = data.text_en.replace(" ","&nbsp")
+	return render_template("Recruit.html", data=data, current_user=current_user())
+	
+
+@app.route("/edit_recruit/<int:id>", methods=["GET", "POST"])
+def edit_recruit(id):
+	data = Recruit.query.get_or_404(id)
+	if request.method == "POST":
+		data.text = request.form['text']
+		data.text_en = request.form['text_en']
+		try:
+			db.session.commit()
+			return redirect('/recruit/')
+		except:
+			return "nepavyko atnaujinti"
+	else:
+		return render_template("APIE_create.html",data=data, current_user=current_user())
+	
+	
+	
+	
+#============================ Purpose ============================	
+	
+	
+@app.route("/purpose/")
+def purpose():
+	try:
+		data = Purpose.query.get_or_404(1)
+	except:
+		data = Purpose()
+		data.text = "Teksto nėra adminas turi pridėti"
+		data.text_en = "Admin have to add text"
+		db.session.add(data)
+		db.session.commit()
+	data.text = data.text.replace(" ","&nbsp")
+	data.text_en = data.text_en.replace(" ","&nbsp")
+	return render_template("Purpose.html", data=data, current_user=current_user())
+	
+
+@app.route("/edit_purpose/<int:id>", methods=["GET", "POST"])
+def edit_purpose(id):
+	data = Purpose.query.get_or_404(id)
+	if request.method == "POST":
+		data.text = request.form['text']
+		data.text_en = request.form['text_en']
+		try:
+			db.session.commit()
+			return redirect('/purpose/')
+		except:
+			return "nepavyko atnaujinti"
+	else:
+		return render_template("APIE_create.html",data=data, current_user=current_user())
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -580,24 +798,3 @@ def tdelete_event(id):
 	
 if __name__=="__main__":
 	app.run(debug=True, host="0.0.0.0", port=5000, threaded=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

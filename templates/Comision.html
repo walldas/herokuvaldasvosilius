@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+
+{% block head%}Etikos komisija{% endblock %}
+
+
+
+
+{% block page%}
+
+<h2> Etikos komisija</h2>
+
+<hr class="my_hr">
+<div class = "row">
+	<div class= " col-lg-10 page" >
+		{% if current_user.lvl == 2 %}
+			<a href="/edit_comision/{{data.id}}" class="btn btn-success pull-right"> redaguoti</a>
+		{% endif %}
+		{% set arr = data.text.split('\n') %}
+		
+		{% for line in arr %}
+			{# In the Jinja template #}
+			{{line|safe}}<br>
+		
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}
