@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect,make_response
+from flask import Flask, render_template, url_for, request, redirect,make_response, send_file
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime,date
 import os
@@ -11,6 +11,8 @@ import uuid
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data_base.db'
+app.config['UPLOAD_DOCS'] = "static/doc/"
+app.config['UPLOAD_Images'] = "static/galerija/"
 db = SQLAlchemy(app)
 
 #============================ Lentutes ============================
@@ -51,7 +53,11 @@ class Document(db.Model):
 	date_created = db.Column(db.DateTime, default=datetime.utcnow)
 	name = db.Column(db.String(4000), default="")
 	
-
+class MyImage(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	name = db.Column(db.String(4000), default="")
+	
 	
 class News(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -137,7 +143,7 @@ if not os.path.exists(app.config['SQLALCHEMY_DATABASE_URI']):
 		
 def guest_user():
 	current_user = User()
-	current_user.name="G"
+	current_user.name=""
 	current_user.surname="Svecias"
 	current_user.email="gg@gg.gg"
 	current_user.lvl=0
@@ -397,13 +403,7 @@ def edit_contact_info(id):
 		return render_template("redaguoti_kontaktus.html",contact_main=main_info, current_user=current_user())
 	
 	
-#============================ dokumentai ============================	
-	
-@app.route("/dokumentai/", methods=["GET", "POST"])
-def documents():
-	if request.method == "POST":
-		return "file"
-	return render_template("dokumentai.html", current_user=current_user())
+
 	
 #============================ naujienos ============================
 	
@@ -766,7 +766,104 @@ def edit_purpose(id):
 	
 	
 	
+#============================ dokumentai ============================	
+def is_name_in_docs(name,docs):
+	for doc in docs:
+		if doc.name == name:
+			return True
+	return False
+
+@app.route("/dokumentai/", methods=["GET", "POST"])
+def documents():
+	if request.method == "POST":
+		docs = list(reversed(Document.query.order_by(Document.date_created).all()))
+		file = request.files['file']
+		if not is_name_in_docs(file.filename, docs):
+			path = app.config['UPLOAD_DOCS'] + file.filename
+			try:
+				file.save(path)
+			except:
+				return "nepavyko issaugoti failo i vieta"
+			try:
+				documen = Document()
+				documen.name = file.filename
+				db.session.add(documen)
+				db.session.commit()
+			except:
+				return "nepavyko issaugoti vardo i duomenu baze"
+	docs = list(reversed(Document.query.order_by(Document.date_created).all()))
+	return render_template("dokumentai.html",docs = docs, current_user=current_user())	
 	
+
+@app.route('/download_document/<int:id>', methods=['GET', 'POST'])
+def download_document(id):
+	doc = Document.query.get_or_404(id)
+	if len(doc.name)> 0:
+		path =  app.config['UPLOAD_DOCS'] + doc.name
+		return send_file(path, as_attachment=True)
+	return redirect('/dokumentai/')
+	
+	
+
+@app.route('/delete_document/<int:id>', methods=['GET', 'POST'])
+def delete_document(id):
+	doc = Document.query.get_or_404(id)
+	try:
+		try:
+			path =  app.config['UPLOAD_DOCS'] + doc.name
+			print(path)
+			os.remove(path)
+		except:pass
+		db.session.delete(doc)
+		db.session.commit()
+		return redirect('/dokumentai/')
+	except:
+		return 'problema trinant dokumenta'
+	
+	
+	
+#============================ Galerija ============================	
+	
+
+	
+@app.route('/galerija/', methods=['GET', 'POST'])
+def galerija():
+	if request.method == "POST":
+		images = list(reversed(MyImage.query.order_by(MyImage.date_created).all()))
+		file = request.files['file']
+		if not is_name_in_docs(file.filename, images):
+			path = app.config['UPLOAD_Images'] + file.filename
+			try:
+				file.save(path)
+			except:
+				return "nepavyko issaugoti failo i vieta"
+			try:
+				my_image = MyImage()
+				my_image.name = "../" + app.config['UPLOAD_Images'] + file.filename
+				db.session.add(my_image)
+				db.session.commit()
+			except:
+				return "nepavyko issaugoti vardo i duomenu baze"
+	images = list(reversed(MyImage.query.order_by(MyImage.date_created).all()))	
+	return render_template("galerija.html",images = images, current_user=current_user())	
+	
+	
+	
+@app.route('/delete_image/<int:id>', methods=['GET', 'POST'])
+def delete_image(id):
+	doc = MyImage.query.get_or_404(id)
+	path =  doc.name[3:]
+	try:
+		try:
+			os.remove(path)
+		except:pass
+		db.session.delete(doc)
+		db.session.commit()
+		return redirect('/galerija/')
+	except:
+		return 'problema trinant paveiksliuka'	
+	
+
 	
 	
 	

@@ -78,7 +78,7 @@
         </a>
         <div class="dropdown-menu bg_dark" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="/dokumentai/">Dokumentai</a>
-          <a class="dropdown-item" href="#">Galerija</a>
+          <a class="dropdown-item" href="/galerija/">Galerija</a>
           <a class="dropdown-item" href="#">EPS</a>
         </div>
       </li>
@@ -113,10 +113,11 @@
         <a class="nav-link" href="/sms/">Žinutės</a>
       </li>
 	  {% endif %}
-	  
+	  {% if current_user.name|length > 0 %}
 	   <li class="nav-item">
         <a class="nav-link" href="#" style="color:yellow">{{current_user.name}}</a>
       </li>
+	  {% endif %}
     </ul>
   </div>
 </nav>
