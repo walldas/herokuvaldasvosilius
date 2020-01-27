@@ -102,7 +102,7 @@ class Comision(db.Model):
 	date_created = db.Column(db.DateTime, default=datetime.utcnow)
 	text = db.Column(db.String(400000), default="")
 	text_en = db.Column(db.String(400000), default="")
-#	
+	
 class Recruit(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	date_created = db.Column(db.DateTime, default=datetime.utcnow)
@@ -110,6 +110,12 @@ class Recruit(db.Model):
 	text_en = db.Column(db.String(400000), default="")
 	
 class Purpose(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	text = db.Column(db.String(400000), default="")
+	text_en = db.Column(db.String(400000), default="")
+	
+class About(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	date_created = db.Column(db.DateTime, default=datetime.utcnow)
 	text = db.Column(db.String(400000), default="")
@@ -205,7 +211,42 @@ def logout():
 
 @app.route("/")
 def index():
-	return render_template("index.html", current_user = current_user())
+	try:
+		data = About.query.get_or_404(1)
+	except:
+		data = About()
+		data.text = "Teksto nėra adminas turi pridėti"
+		data.text_en = "Admin have to add text"
+		db.session.add(data)
+		db.session.commit()
+	data.text = data.text.replace(" ","&nbsp")
+	data.text_en = data.text_en.replace(" ","&nbsp")
+	news_ = list(reversed(News.query.order_by(News.date_created).all()))
+	return render_template("index.html", data=data,news=news_, current_user=current_user())
+	#return render_template("index.html", current_user = current_user())
+	
+	
+@app.route("/edit_about/<int:id>", methods=["GET", "POST"])
+def edit_about(id):
+	data = About.query.get_or_404(id)
+	if request.method == "POST":
+		data.text = request.form['text']
+		data.text_en = request.form['text_en']
+		try:
+			db.session.commit()
+			return redirect('/')
+		except:
+			return "nepavyko atnaujinti"
+	else:
+		return render_template("APIE_create.html",data=data, current_user=current_user())
+	
+	
+	
+@app.errorhandler(404)
+def page_not_found(error):
+   return render_template('404.html',current_user=current_user()), 404
+	
+	
 	
 #============================ Registracija ============================
 
@@ -867,6 +908,11 @@ def delete_image(id):
 	
 	
 	
+	
+
+	
+
+
 	
 	
 	

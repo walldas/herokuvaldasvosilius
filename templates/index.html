@@ -9,8 +9,68 @@
 {% block page%}
 
 <div class=" page">
+<h1>apie LPD</h1><hr>
+<p>
+	<a href="/edit_about/{{data.id}}" class="btn btn-success pull-right"> Redaguoti </a>
+	
+	
+	
+	{% set arr = data.text.split('\n') %}
+		
+		{% for line in arr %}
+			{# In the Jinja template #}
+			{{line|safe}}<br>
+		
+		{% endfor %}
+	
+</p>
 
-<h1>Progresas</h1><hr>
+
+
+
+<a href="/history/" class="btn btn-outline-primary border"> toliau </a>
+
+</div>
+
+<a href="/Naujienos/" class="text-dark text-decoration-none">
+<div class=" page"><h2>Renginai</h2>
+
+<hr>
+   
+{% if news|length == 0%}
+	<div class = " ">
+		<p> Naujienų sąrašas tuščias</p>
+	</div>
+{% else %}
+	{% for new in news %}
+		{% if new.title|length > 0%}
+			<div class = " ">
+				<p><b><big> {{new.title}} </big> </b> {{new.date}} - {{new.location}}</p>
+				
+			</div>
+		{% endif %}
+	{% endfor %}
+{% endif %}
+
+
+
+</div>
+</a>
+<div class=" page">
+
+
+<h2>Progresas</h2><hr>
+
+	<p>
+		"apie LPD" to daikto pirmas sakinys (padaryt, kad paspaudus ant kokio "toliau" permestų į "apie LPD" likusią dalį)<br>
+		Pagrindiniame renginiai (ant jų paspaudus iškart meta į renginius)
+		
+	
+	</p>
+
+
+
+
 	
 	<ul>
 		<li>0126 - sukurta "Galerija"</li>
