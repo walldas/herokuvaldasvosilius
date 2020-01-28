@@ -16,8 +16,13 @@
 </head>
 <body>
 
-<div class= "top-image" style="background-image: url(../static/img/cropped-1920.jpg);">
+	{% if current_user.lang == "LT" %}
+		<a href="/change_lang/" class="btn pull-right"> <img src="../static/img/EN.png"></a>
+	{% else %}
+		<a href="/change_lang/" class="btn pull-right"> <img src="../static/img/LT.png"></a>
+	{% endif %}
 	
+<div class= "top-image" style="background-image: url(../static/img/cropped-1920.jpg);">
 		<!--<img class="img-flex" src="../static/img/cropped-1920.jpg"/>-->
 		<div class="container">
 			<div class="blog-logoa">
@@ -35,7 +40,11 @@
 <div class = "container">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg_dark ">
-  <a class="navbar-brand" href="/"> Pagrindinis</a>
+	{% if current_user.lang == "LT" %}
+		<a class="navbar-brand" href="/"> Pagrindinis</a>
+	{% else %}
+		<a class="navbar-brand" href="/"> Main</a>
+	{% endif %}
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -46,77 +55,58 @@
       </li>-->
       <li class="nav-item dropdown ">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Renginiai
+        {% if current_user.lang == "LT" %} Renginiai {% else %} Events {% endif %}
         </a>
         <div class="dropdown-menu bg_dark" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/Naujienos/">Naujienos</a>
-          <a class="dropdown-item" href="/Renginiai_lietuvoje/">Renginiai Lietuvoje</a>
-          <a class="dropdown-item" href="/Tarptautiniai_renginiai/">Tarptautiniai renginiai</a>
+          <a class="dropdown-item" href="/Naujienos/"> {% if current_user.lang == "LT" %} Naujienos {% else %} News {% endif %}</a>
+          <a class="dropdown-item" href="/Renginiai_lietuvoje/"> {% if current_user.lang == "LT" %} Renginiai Lietuvoje {% else %} Events in Lithuania {% endif %}</a>
+          <a class="dropdown-item" href="/Tarptautiniai_renginiai/"> {% if current_user.lang == "LT" %} Tarptautiniai renginiai {% else %} International events {% endif %}</a>
         </div>
       </li>
       
 	  <li class="nav-item dropdown ">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Apie LPD
+           {% if current_user.lang == "LT" %} Apie LPD {% else %} About LPD {% endif %}
         </a>
         <div class="dropdown-menu bg_dark" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/purpose/">Tikslai ir vizija</a>
-          <a class="dropdown-item" href="/history/">Istorija</a>
-          <a class="dropdown-item" href="/officer/">Valdyba</a>
-          <a class="dropdown-item" href="/comision/">Etikos komisija</a>
-          <a class="dropdown-item" href="/recruit/">Narystė</a>
+          <a class="dropdown-item" href="/purpose/"> {% if current_user.lang == "LT" %} Tikslai ir vizija {% else %} Goals and vision {% endif %}</a>
+          <a class="dropdown-item" href="/history/"> {% if current_user.lang == "LT" %} Istorija {% else %} History {% endif %}</a>
+          <a class="dropdown-item" href="/officer/"> {% if current_user.lang == "LT" %} Valdyba {% else %} Management {% endif %}</a>
+          <a class="dropdown-item" href="/comision/"> {% if current_user.lang == "LT" %} Etikos komisija {% else %} Ethics Commission {% endif %}</a>
+          <a class="dropdown-item" href="/recruit/"> {% if current_user.lang == "LT" %} Narystė {% else %} Membership {% endif %}</a>
         </div>
       </li>
 	  
 	  <li class="nav-item">
-        <a class="nav-link" href="/kontaktai/">Kontaktai</a>
+        <a class="nav-link" href="/kontaktai/"> {% if current_user.lang == "LT" %} Kontaktai {% else %} Contacts {% endif %}</a>
       </li>
 	  {% if current_user.lvl > 0 %}
       <li class="nav-item dropdown ">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          LDP nariams
+           {% if current_user.lang == "LT" %} LPD nariams {% else %} For LPD members {% endif %}
         </a>
         <div class="dropdown-menu bg_dark" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/dokumentai/">Dokumentai</a>
-          <a class="dropdown-item" href="/galerija/">Galerija</a>
+          <a class="dropdown-item" href="/dokumentai/">{% if current_user.lang == "LT" %} Dokumentai {% else %} Documents {% endif %}</a>
+          <a class="dropdown-item" href="/galerija/">{% if current_user.lang == "LT" %} Galerija {% else %} Gallery {% endif %}</a>
           <a class="dropdown-item" href="#">EPS</a>
         </div>
       </li>
 	  {% endif %}
 	  {% if current_user.lvl == 0  and current_user.name|length <= 1 %}
-	  <li class="nav-item">
-        <a class="nav-link" href="/registracija/">Registruotis</a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="/prisijungti/">Prisijungti</a>
-      </li>
+	  <li class="nav-item"><a class="nav-link" href="/registracija/"> {% if current_user.lang == "LT" %} Registruotis {% else %} Sign up {% endif %}</a></li>
+	  <li class="nav-item"><a class="nav-link" href="/prisijungti/"> {% if current_user.lang == "LT" %} Prisijungti {% else %} Log in {% endif %}</a></li>
 	  {% endif %}
 	  {% if current_user.lvl > 0 or current_user.name|length > 1 %}
-	  <li class="nav-item">
-        <a class="nav-link" href="/edit_user/{{current_user.id}}">Profilis</a>
-      </li>
-	  
-	  
-	  <li class="nav-item">
-        <a class="nav-link" href="/logout/">Atsijungti</a>
-      </li>
+	  <li class="nav-item"><a class="nav-link" href="/edit_user/{{current_user.id}}">{% if current_user.lang == "LT" %} Profilis {% else %} Profile {% endif %}</a></li>
+	  <li class="nav-item"><a class="nav-link" href="/logout/">{% if current_user.lang == "LT" %} Atsijungti {% else %} Log out {% endif %}</a></li>
 	  {% endif %}
 	  
 	  {% if current_user.lvl == 2 %}
-	  
-	  <li class="nav-item">
-        <a class="nav-link" href="/vartotojai/">Vartotojai</a>
-      </li>
-	  
-	  
-	  <li class="nav-item">
-        <a class="nav-link" href="/sms/">Žinutės</a>
-      </li>
+	  <li class="nav-item"><a class="nav-link" href="/vartotojai/">{% if current_user.lang == "LT" %} Vartotojai {% else %} Users {% endif %}</a></li>
+	  <li class="nav-item"><a class="nav-link" href="/sms/">{% if current_user.lang == "LT" %} Žinutės {% else %} Messages {% endif %}</a></li>
 	  {% endif %}
 	  {% if current_user.name|length > 0 %}
-	   <li class="nav-item">
-        <a class="nav-link" href="#" style="color:yellow">{{current_user.name}}</a>
-      </li>
+	   <li class="nav-item"><a class="nav-link" href="#" style="color:yellow">{{current_user.name}}</a></li>
 	  {% endif %}
     </ul>
   </div>

@@ -31,6 +31,7 @@ class User(db.Model):
 	show = db.Column(db.String(10), default="False")
 	confirmed = db.Column(db.String(10), default="False")
 	session_token = db.Column(db.String, default="")
+	lang = db.Column(db.String, default="LT")
 	
 	
 	
@@ -140,6 +141,7 @@ if not os.path.exists(app.config['SQLALCHEMY_DATABASE_URI']):
 		super_admin.info = "Pradinis administratorius"
 		super_admin.show = "False"
 		super_admin.confirmed = "True"
+		super_admin.lang = "LT"
 		db.session.add(super_admin)
 		db.session.commit()
 
@@ -154,6 +156,7 @@ def guest_user():
 	current_user.email="gg@gg.gg"
 	current_user.lvl=0
 	current_user.id=-1
+	current_user.lang = "LT"
 	return current_user
 	
 def current_user():
@@ -161,6 +164,8 @@ def current_user():
 	current_user = User.query.filter_by(email=email).first()
 	if current_user == None:
 		current_user = guest_user()
+	current_user.lang = request.cookies.get("current-user-lang")
+	#print(current_user.lang)
 	return current_user
 
 
@@ -191,6 +196,7 @@ def login():
 			response.set_cookie("current-user-lvl", str(user.lvl)) 
 			response.set_cookie("current-user-id", str(user.id)) 
 			response.set_cookie("current-user-email", str(user.email)) 
+			response.set_cookie("current-user-lang", str(user.lang)) 
 			return response
 	else:
 		return render_template("login.html", email = email, message = message,fokus=fokus, current_user=current_user())
@@ -204,9 +210,19 @@ def logout():
 	response.set_cookie('current-user-lvl', '', expires=0)
 	response.set_cookie('current-user-id', '', expires=0)
 	response.set_cookie('current-user-email', '', expires=0)
+	response.set_cookie('current-user-lang', '', expires=0)
 	
 	return response
 	
+@app.route("/change_lang/")
+def change_lang():
+	response = make_response(redirect(url_for('index')))
+	lang = request.cookies.get("current-user-lang")
+	if lang == "LT":
+		response.set_cookie("current-user-lang","EN") 
+	else:
+		response.set_cookie("current-user-lang","LT") 	
+	return response
 
 
 @app.route("/")

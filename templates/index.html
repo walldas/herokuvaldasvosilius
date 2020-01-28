@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 
-{% block head%}Pagrindinis{% endblock %}
+{% block head%}{% if current_user.lang == "LT" %} Pagrindinis {% else %} Main {% endif %}{% endblock %}
 
 
 
@@ -9,13 +9,17 @@
 {% block page%}
 
 <div class=" page">
-<h1>apie LPD</h1><hr>
-<p>
+<h1> {% if current_user.lang == "LT" %} Apie LPD {% else %} About LPD {% endif %}</h1><hr>
+<p>{% if current_user.lvl == 2%}
 	<a href="/edit_about/{{data.id}}" class="btn btn-success pull-right"> Redaguoti </a>
+	{% endif %}
 	
+	{% if current_user.lang == "LT" %} 
+		{% set arr = data.text.split('\n') %}
+	{% else %} 
+		{% set arr = data.text_en.split('\n') %}
+	{% endif %}
 	
-	
-	{% set arr = data.text.split('\n') %}
 		
 		{% for line in arr %}
 			{# In the Jinja template #}
@@ -28,24 +32,24 @@
 
 
 
-<a href="/history/" class="btn btn-outline-primary border"> toliau </a>
+<a href="/history/" class="btn btn-outline-primary border">  {% if current_user.lang == "LT" %} toliau {% else %} more {% endif %}</a>
 
 </div>
 
 <a href="/Naujienos/" class="text-dark text-decoration-none">
-<div class=" page"><h2>Renginai</h2>
+<div class=" page"><h2>{% if current_user.lang == "LT" %} Renginai{% else %} Events {% endif %}</h2>
 
 <hr>
    
 {% if news|length == 0%}
 	<div class = " ">
-		<p> Naujienų sąrašas tuščias</p>
+		<p>  {% if current_user.lang == "LT" %} Naujienų sąrašas tuščias{% else %} Empty list {% endif %}</p>
 	</div>
 {% else %}
 	{% for new in news %}
 		{% if new.title|length > 0%}
 			<div class = " ">
-				<p><b><big> {{new.title}} </big> </b> {{new.date}} - {{new.location}}</p>
+				<p><b><big> {% if current_user.lang == "LT" %} {{new.title}} {% else %} {{new.title_en}} {% endif %} </big> </b> {{new.date}} - {{new.location}}</p>
 				
 			</div>
 		{% endif %}
@@ -61,53 +65,49 @@
 
 <h2>Progresas</h2><hr>
 
-	<p>
-		"apie LPD" to daikto pirmas sakinys (padaryt, kad paspaudus ant kokio "toliau" permestų į "apie LPD" likusią dalį)<br>
-		Pagrindiniame renginiai (ant jų paspaudus iškart meta į renginius)
 		
-	
-	</p>
-
-
-
-
-	
 	<ul>
+		<li>0128 - Puslapis pradėtas versti į anglų kalbą.Sukurtas migtukas pakeisti kalbai. Įšversta Navigacija ir "Pagrindinis" </li>
+		<li>0127 - papildytas "Pagrindinis"</li>
+		<ul>
+			<li>"apie LPD" to daikto pirmas sakinys (padaryt, kad paspaudus ant kokio "tliiau" permestų į "apie LPD" likusią dalį)</li>
+			<li>Pagrindiniame renginiai (ant jų paspaudus iškart meta į renginius)</li>
+		</ul>
 		<li>0126 - sukurta "Galerija"</li>
 		<li>0125 - sukurta "Dokumentai" įkėlimas ir persisiuntimas</li>
 		<li>0124 - Sukurta "Apie LDP": </li>
 		<ul>
-			<ol>Tikslai ir vizija</ol>
-			<ol>Istorija</ol>
-			<ol>Valdyba</ol>
-			<ol>Etikos komisija</ol>
-			<ol>Narystė</ol>
-			<ol>Redagavime inplementuota HTML sintakses palaikymas (teksto redagavimui) su saugumu (tag'as neveikia jei viduje yra tarpas)</ol>
+			<li>Tikslai ir vizija</li>
+			<li>Istorija</li>
+			<li>Valdyba</li>
+			<li>Etikos komisija</li>
+			<li>Narystė</li>
+			<li>Redagavime inplementuota HTML sintakses palaikymas (teksto redagavimui) su saugumu (tag'as neveikia jei viduje yra tarpas)</li>
 		</ul>
 		<li>0123 - Sukurti renginiai: "Naujienos","Renginiai Lietuvoje", "Tarptautiniai renginiai"</li>
 		<li>0122 - Įvedimo formų validacija (Registracijoje ir Profilyje), Bugu taisymas, Pradetas failų įkėlimas (nebaigta)</li>
 		<li>0121 - sukurta:</li>
 		<ul>
-			<ol>"Prisijungti"</ol>
-			<ol>"Atsijungti"</ol>
-			<ol>"Profilis"</ol>
-			<ol>Integruota "Cookies" sistema</ol>
-			<ol>Navigacija suskirstyta pagal vartotojo lygį</ol>
-			<ol>Saugumo užtikrinimas: "Žinutės","Profilis","Vartotojai"</ol>
-			<ol>pridetas super administratorius kaip pradinis administratorius paleidus pirma karta šį projektą</ol>
+			<li>"Prisijungti"</li>
+			<li>"Atsijungti"</li>
+			<li>"Profilis"</li>
+			<li>Integruota "Cookies" sistema</li>
+			<li>Navigacija suskirstyta pagal vartotojo lygį</li>
+			<li>Saugumo užtikrinimas: "Žinutės","Profilis","Vartotojai"</li>
+			<li>pridetas super administratorius kaip pradinis administratorius paleidus pirma karta šį projektą</li>
 			
 		</ul>
 		<li>0120 - pilnai užbaigti "Kontaktai" ir "Žinutės"</li>
 		<li>0115 - sukurta skiltis "Kontaktai" (nepilnai)</li>
 		<li>0112 - sukurta skiltis "Vartotojai"</li>
 		<ul>
-			<ol>atvaizdavimas is duombazės</ol>
-			<ol>redagavimas</ol>
-			<ol>ištinimas</ol>
-			<ol>vartotojo patvirtinimas</ol>
-			<ol>vartotojų lygių korekcija</ol>
-			<ol>rodyti/slepti vardotoja kontaktuose</ol>
-			<ol>patalpinta i web test versija</ol>
+			<li>atvaizdavimas is duombazės</li>
+			<li>redagavimas</li>
+			<li>ištinimas</li>
+			<li>vartotojo patvirtinimas</li>
+			<li>vartotojų lygių korekcija</li>
+			<li>rodyti/slepti vardotoja kontaktuose</li>
+			<li>patalpinta i web test versija</li>
 		</ul>
 		<li>0111 - sukurta skiltis "Registracija"</li>
 		<li>0110 - kodo apjungimas : html, python, duombazė</li>
