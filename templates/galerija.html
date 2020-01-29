@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 
-{% block head%}Galerija{% endblock %}
+{% block head%}{% if current_user.lang == "LT" %} Galerija {% else %} Gallery {% endif %}{% endblock %}
 
 
 
@@ -13,7 +13,7 @@
 
 	{% if current_user.lvl == 2%}
 	<form class="form-horizontal  " role="form"  method="POST" enctype="multipart/form-data">
-		<h2>Nuotraukos įkėlimas</h2><hr>
+		<h2>{% if current_user.lang == "LT" %} Nuotraukos įkėlimas {% else %} Photo upload {% endif %}</h2><hr>
 			<div class="form-group">
 				<label for="photo" class="col-md-2 control-label">Galerija</label>
 				<div class="col-md-4">
@@ -32,7 +32,7 @@
 
 <div class=" page">
 
-<h1>Galerija</h1><hr>
+<h1>{% if current_user.lang == "LT" %} Galerija {% else %} Gallery {% endif %}</h1><hr>
 
 
 
@@ -42,13 +42,7 @@
     <div id="mdb-lightbox-ui"></div>
 
     <div class="mdb-lightbox no-margin">
-		<!--
-      <figure class="col-md-4">
-        <a href="https://mdbootstrap.com/img/Photos/Horizontal/Nature/12-col/img%20(117).jpg" data-size="1600x1067">
-          <img alt="picture" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(117).jpg"
-            class="img-fluid">
-        </a>
-      </figure>-->
+		
 	{% for image in images %}
 		
 		<figure class="col-md-4">

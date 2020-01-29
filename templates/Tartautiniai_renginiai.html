@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block head%}Tarptautiniai renginiai{% endblock %}
+{% block head%}{% if current_user.lang == "LT" %} Tarptautiniai renginiai {% else %} International events{% endif %}{% endblock %}
 {% block page%}
-<h2> Tarptautiniai renginiai</h2>
+<h2> {% if current_user.lang == "LT" %} Tarptautiniai renginiai {% else %} International events{% endif %}</h2>
 <hr class="my_hr">
 	<div class= "empty_page">
 		<div class = "row justify-content-md-center card_">
@@ -12,13 +12,13 @@
 			{% endif %}
 			{% if events|length == 0%}
 				<div class = "col-md-8 page shadow-sm card_">
-					<p> Tarptautinių renginių sąrašas tuščias</p>
+					{% if current_user.lang == "LT" %} <p> Tarptautinių renginių sąrašas tuščias</p> {% else %} List "International events" is empty{% endif %}
 				</div>
 			{% else %}
 				{% for event in events %}
 					{% if event.title|length > 0%}
 						<div class = "col-md-8 page shadow-sm card_">
-							<b><big>{{event.title}}</big></b><hr>
+							<b><big>{% if current_user.lang == "LT" %} {{event.title}}{% else %}{{event.title_en}}{% endif %}</big></b><hr>
 							<p>{{event.date}} - {{event.location}}
 								{% if current_user.lvl == 2 %}
 									<span class="pull-right">
@@ -27,7 +27,6 @@
 									</span>
 								{% endif %}
 							</p>
-							
 						</div>
 					{% endif %}
 				{% endfor %}

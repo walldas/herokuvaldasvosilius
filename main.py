@@ -218,10 +218,10 @@ def logout():
 def change_lang():
 	response = make_response(redirect(url_for('index')))
 	lang = request.cookies.get("current-user-lang")
-	if lang == "LT":
-		response.set_cookie("current-user-lang","EN") 
+	if lang == "EN":
+		response.set_cookie("current-user-lang","LT") 
 	else:
-		response.set_cookie("current-user-lang","LT") 	
+		response.set_cookie("current-user-lang","EN") 	
 	return response
 
 

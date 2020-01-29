@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 
-{% block head%}Žinutės{% endblock %}
+{% block head%}{% if current_user.lang == "LT" %} Žinutės {% else %} Messages {% endif %}{% endblock %}
 
 
 
@@ -10,7 +10,7 @@
 
 
 
-<h1>Žinutės</h1>
+<h1>{% if current_user.lang == "LT" %} Žinutės {% else %} Messages {% endif %}</h1>
 <hr class="my_hr">
 
 
@@ -19,7 +19,7 @@
 		{% if current_user.lvl == 2%}
 			{% if messages|length == 0%}
 					<div class = "col-md-3 page shadow-sm card_">
-						<p> Rodomu vartotojų kontaktų sąrašas tuščias</p>
+						<p> {% if current_user.lang == "LT" %} Žinučių nėra {% else %} list "Messages" is empty {% endif %}</p>
 					</div>
 			{% else %}
 			

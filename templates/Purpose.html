@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
 
-{% block head %} Tikslai ir Vizija {% endblock %}
+{% block head %}  {% if current_user.lang == "LT" %} Tikslai ir Vizija {% else %} Goals and Vision {% endif %}{% endblock %}
 
 
 
 
 {% block page%}
 
-<h2> Tikslai ir Vizija</h2>
+<h2> {% if current_user.lang == "LT" %} Tikslai ir Vizija {% else %} Goals and Vision {% endif %}</h2>
 
 <hr class="my_hr">
 <div class = "row">
@@ -16,7 +16,12 @@
 		{% if current_user.lvl == 2 %}
 			<a href="/edit_purpose/{{data.id}}" class="btn btn-success pull-right"> redaguoti</a>
 		{% endif %}
-		{% set arr = data.text.split('\n') %}
+		{% if current_user.lang == "LT" %} 
+			{% set arr = data.text.split('\n') %}
+		{% else %} 
+			{% set arr = data.text_en.split('\n') %}
+		{% endif %}
+		
 		
 		{% for line in arr %}
 			{# In the Jinja template #}

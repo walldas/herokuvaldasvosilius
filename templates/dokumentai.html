@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 
-{% block head%}Dokumentai{% endblock %}
+{% block head%}{% if current_user.lang == "LT" %} Dokumentai {% else %} Documents {% endif %}{% endblock %}
 
 
 
@@ -12,7 +12,7 @@
 {% if current_user.lvl > 0%}
 	{% if current_user.lvl == 2%}
 	<form class="form-horizontal  " role="form"  method="POST" enctype="multipart/form-data">
-		<h2>Dokumentai</h2><hr>
+		<h2>{% if current_user.lang == "LT" %} Dokumentai {% else %} Documents {% endif %}</h2><hr>
 			<div class="form-group">
 				<label for="photo" class="col-md-2 control-label">Dokumentas</label>
 				<div class="col-md-4">
@@ -27,7 +27,7 @@
 	{% endif %}	
 			
 			{% if docs|length == 0 %}
-				<p> nėra įkeltų dokumentų </p>
+				<p>  {% if current_user.lang == "LT" %} nėra įkeltų dokumentų {% else %} List "Documents" is empty {% endif %}</p>
 			
 			{% endif %}	
 			

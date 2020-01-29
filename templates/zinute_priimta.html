@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 
-{% block head%}Žinutė priimta{% endblock %}
+{% block head%}{% if current_user.lang == "LT" %} Žinutė priimta {% else %} Message accepted {% endif %}{% endblock %}
 
 
 
@@ -11,7 +11,7 @@
 	<div class = "row justify-content-md-center">
 		<div class = "col-lg-5 shadow-sm page">
 		
-			<h2>Žinutė priimta</h2><hr>
+			<h2>{% if current_user.lang == "LT" %} Žinutė priimta {% else %} Message accepted {% endif %}</h2><hr>
 			
 			
 			

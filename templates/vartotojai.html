@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 
-{% block head%}Vartotojai{% endblock %}
+{% block head%}{% if current_user.lang == "LT" %} Vartotojai {% else %} Users {% endif %}{% endblock %}
 
 
 
@@ -15,15 +15,15 @@
 		
 		<table class="table table-striped">
 			<tr>
-				<th scope="col">Laikas</th>
-				<th scope="col">Lygis</th>
-				<th scope="col">Vardas</th>
-				<th scope="col">Pavardė</th>
-				<th scope="col">E-Paštas</th>
-				<th scope="col">Telefonas</th>
-				<th scope="col">Kontaktuose</th>
-				<th scope="col">Papildoma informacija</th>
-				<th scope="col">Veiksmai</th>
+				<th scope="col">{% if current_user.lang == "LT" %} Laikas {% else %} Time {% endif %}</th>
+				<th scope="col">{% if current_user.lang == "LT" %} Lygis {% else %} Level {% endif %}</th>
+				<th scope="col">{% if current_user.lang == "LT" %} Vardas {% else %} Name {% endif %}</th>
+				<th scope="col">{% if current_user.lang == "LT" %} Pavardė {% else %} Surname {% endif %}</th>
+				<th scope="col">{% if current_user.lang == "LT" %} E-Paštas {% else %} Email {% endif %}</th>
+				<th scope="col">{% if current_user.lang == "LT" %} Telefonas {% else %} Phone {% endif %}</th>
+				<th scope="col">{% if current_user.lang == "LT" %} Kontaktuose {% else %} In contacts {% endif %}</th>
+				<th scope="col">{% if current_user.lang == "LT" %} Papildoma informacija {% else %} additional information {% endif %}</th>
+				<th scope="col">{% if current_user.lang == "LT" %} Veiksmai {% else %} Actions {% endif %}</th>
 			
 			</tr>
 			{% for user in users %}
@@ -36,13 +36,13 @@
 							<a href="/down_user/{{user.id}}" class="mini_btn bg_red"> <b> - </b> </a>
 						{% endif %}
 						
-							
+							&nbsp
 							{% if user.lvl == 0 %}
-								&nbsp Svečias
+								{% if current_user.lang == "LT" %} Svečias {% else %} Guest {% endif %}
 							{% elif user.lvl == 1 %}
-								&nbsp Narys
+								{% if current_user.lang == "LT" %} Narys {% else %} Member {% endif %}
 							{% elif user.lvl == 2 %}
-								&nbsp Adminas
+								{% if current_user.lang == "LT" %} Adminas {% else %} Admin {% endif %}
 							{% endif %}
 							
 							
@@ -59,9 +59,9 @@
 					<td> 
 						{% if user.confirmed == "True" %}
 								{% if user.show == "False" %}
-									<a href="/show_user/{{user.id}}" class="btn btn-warning"> rodyti </a>
+									<a href="/show_user/{{user.id}}" class="btn btn-warning">  {% if current_user.lang == "LT" %} rodyti {% else %} show {% endif %}</a>
 								{% else %}
-									<a href="/show_user/{{user.id}}" class="btn btn-dark"> slėpti </a>
+									<a href="/show_user/{{user.id}}" class="btn btn-dark"> {% if current_user.lang == "LT" %} slėpti {% else %} hide {% endif %} </a>
 									
 								{% endif %}
 						{% else %}
@@ -72,10 +72,10 @@
 					<td>{{user.info}}</td>
 					<td> 
 
-						<a href="/edit_user/{{user.id}}" class="btn btn-success"> redaguoti </a>
-						<a href="/delete_user/{{user.id}}" class="btn btn-danger"> ištrinti </a>
+						<a href="/edit_user/{{user.id}}" class="btn btn-success">  {% if current_user.lang == "LT" %} redaguoti {% else %} edit {% endif %}</a>
+						<a href="/delete_user/{{user.id}}" class="btn btn-danger"> {% if current_user.lang == "LT" %} ištrinti {% else %} delete {% endif %} </a>
 						{% if user.confirmed == "False" %}
-							<a href="/confirm_user/{{user.id}}" class="btn btn-primary"> patvirtinti </a>
+							<a href="/confirm_user/{{user.id}}" class="btn btn-primary">  {% if current_user.lang == "LT" %} patvirtinti {% else %} confirm {% endif %}</a>
 						{% endif %}
 						
 					</td>

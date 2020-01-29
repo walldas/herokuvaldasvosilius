@@ -28,7 +28,8 @@
 			<div class="blog-logoa">
 					
 				<a href="/" title="LPTD - Lietuvos Psichoterapijos Draugija" rel="home">
-					<img src="../static/img/ICON-PNG.png" alt="LPTD - Lietuvos Psichoterapijos Draugija">
+					<img src="../static/img/ICON-PNG.png" alt= "LPD - Lietuvos Psichoterapijos Draugija">
+					
 				</a>
 			</div>
 		</div>
@@ -130,7 +131,12 @@
 
 <div class="bg_dark footer-copyright text-center footer">
 	<div class="container">
-			<p> © 2020 LPTD – <a href="/">LIETUVOS PSICHOTERAPIJOS DRAUGIJA</a>  </p>
+			{% if current_user.lang == "LT" %}
+			<p> © 2020 LPD – <a href="/">LIETUVOS PSICHOTERAPIJOS DRAUGIJA</a>  </p> 
+			{% else %}
+			<p> © 2020 LPD – <a href="/">LITHUANIAN PSYCHOTHERAPY FRIENDSHIP</a>  </p> 
+			{% endif %}
+			
 
 	</div>
 </div>
@@ -146,4 +152,5 @@
   
 </body>
 
+<p class="hidden">puslapį sukūrė VALDAS VOSILIUS</p>
 </html>

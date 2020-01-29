@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block head%}Naujienos{% endblock %}
+{% block head%}{% if current_user.lang == "LT" %} Naujienos {% else %} News {% endif %}{% endblock %}
 {% block page%}
-<h2> Naujienos</h2>
+<h2> {% if current_user.lang == "LT" %} Naujienos {% else %} News {% endif %}</h2>
 <hr class="my_hr">
 	<div class= "empty_page">
 		<div class = "row justify-content-md-center card_">
@@ -12,13 +12,13 @@
 			{% endif %}
 			{% if news|length == 0%}
 				<div class = "col-md-8 page shadow-sm card_">
-					<p> Naujienų sąrašas tuščias</p>
+					{% if current_user.lang == "LT" %} <p> Naujienų sąrašas tuščias</p> {% else %} <p> List News is empty</p> {% endif %}
 				</div>
 			{% else %}
 				{% for new in news %}
 					{% if new.title|length > 0%}
 						<div class = "col-md-8 page shadow-sm card_">
-							<b><big>{{new.title}}</big></b><hr>
+							<b><big>{% if current_user.lang == "LT" %} {{new.title}} {% else %} {{new.title_en}} {% endif %}</big></b><hr>
 							<p>{{new.date}} - {{new.location}}
 								{% if current_user.lvl == 2 %}
 									<span class="pull-right">
