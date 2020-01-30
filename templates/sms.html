@@ -25,7 +25,7 @@
 			
 				{% for message in messages %}
 					<div class = "col-md-9 page shadow-sm card_">
-						<p><b>{{message.name}}</b> {{message.email}} <a href="/remove_message/{{message.id}}" class="btn btn-danger pull-right"> ištrinti </a></p>
+						<p><b>{{message.name}}</b> {{message.email}} <a href="/remove_message/{{message.id}}" class="btn btn-danger pull-right">  {% if current_user.lang == "LT" %} ištrinti {% else %} Delete {% endif %}</a></p>
 							
 						<hr>
 						

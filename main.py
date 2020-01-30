@@ -130,6 +130,7 @@ if not os.path.exists(app.config['SQLALCHEMY_DATABASE_URI']):
 	db.create_all()
 	users_ = list(User.query.all())
 	if len(users_)== 0:
+		#Admin
 		super_admin = User()
 		super_admin.name = "SuperAdmin"
 		super_admin.surname = "SuperAdmin"
@@ -279,7 +280,9 @@ def registration():
 		user.password = hashlib.sha256(password.encode()).hexdigest()
 		#passwordr = request.form['passwordr']
 		#user.image = format(request.form['image'])
-		user.info = request.form['info']
+		#user.info = request.form['info']
+		user.info = ""
+		user.info_en = ""
 		user.show = "False"
 		user.confirmed = "False"
 		try:
@@ -362,6 +365,7 @@ def edit_user(id):
 		#passwordr = request.form['passwordr']
 		#user.image = format(request.form['image'])
 		user.info = request.form['info']
+		user.info_en = request.form['info_en']
 		#user.show = "False"
 		try:
 			db.session.commit()

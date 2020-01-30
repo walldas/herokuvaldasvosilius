@@ -7,7 +7,7 @@
 		<div class = "row justify-content-md-center card_">
 			{% if current_user.lvl == 2 %}
 				<div class = "col-md-8 ">
-						<a href="/create_news/" class= "btn btn-warning" > Pridėti naujiena</a> 
+						<a href="/create_news/" class= "btn btn-warning" >  {% if current_user.lang == "LT" %} Pridėti naujiena {% else %} Add new {% endif %}</a> 
 				</div>
 			{% endif %}
 			{% if news|length == 0%}
@@ -22,8 +22,8 @@
 							<p>{{new.date}} - {{new.location}}
 								{% if current_user.lvl == 2 %}
 									<span class="pull-right">
-										<a href="/edit_new/{{new.id}}" class="btn btn-success"> redaguoti </a>
-										<a href="/delete_new/{{new.id}}" class="btn btn-danger"> ištrinti </a>
+										<a href="/edit_new/{{new.id}}" class="btn btn-success"> {% if current_user.lang == "LT" %} Redaguoti {% else %} Edit {% endif %} </a>
+										<a href="/delete_new/{{new.id}}" class="btn btn-danger"> {% if current_user.lang == "LT" %} Ištrinti {% else %} Delete {% endif %} </a>
 									</span>
 								{% endif %}
 							</p>

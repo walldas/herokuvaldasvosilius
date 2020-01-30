@@ -15,13 +15,13 @@
 	<form class="form-horizontal  " role="form"  method="POST" enctype="multipart/form-data">
 		<h2>{% if current_user.lang == "LT" %} Nuotraukos įkėlimas {% else %} Photo upload {% endif %}</h2><hr>
 			<div class="form-group">
-				<label for="photo" class="col-md-2 control-label">Galerija</label>
+				<label for="photo" class="col-md-2 control-label">{% if current_user.lang == "LT" %} Galerija {% else %} Gallery {% endif %}</label>
 				<div class="col-md-4">
 					<input type="file" id="file" name="file"  class="form-control-file" required>
 					
 				</div>
 				<div class="col-md-4">
-					<input type="submit" value="Įkelti" class="btn btn-success btn-block pull-right">
+					<input type="submit" value="{% if current_user.lang == "LT" %} Įkelti {% else %} upload {% endif %}" class="btn btn-success btn-block pull-right">
 				</div>
 			</div>
 	</form>
@@ -50,7 +50,7 @@
 			  <img alt="picture" src="{{image.name}}" class="img-fluid">
 			</a>
 			{% if current_user.lvl == 2 %}
-				<a href="/delete_image/{{image.id}}"  class = " btn btn-danger float-right" > ištrinti </a>
+				<a href="/delete_image/{{image.id}}"  class = " btn btn-danger float-right" > {% if current_user.lang == "LT" %} ištrinti {% else %} Delete {% endif %} </a>
 			{% endif %}
 		</figure>
 	

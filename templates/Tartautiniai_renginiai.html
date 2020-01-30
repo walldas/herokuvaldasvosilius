@@ -7,7 +7,7 @@
 		<div class = "row justify-content-md-center card_">
 			{% if current_user.lvl == 2 %}
 				<div class = "col-md-8 ">
-					<a href="/create_tevent/" class= "btn btn-warning" > Pridėti tarptautini renginį</a> 
+					<a href="/create_tevent/" class= "btn btn-warning" > {% if current_user.lang == "LT" %} Pridėti renginį {% else %} Add new {% endif %}</a> 
 				</div>
 			{% endif %}
 			{% if events|length == 0%}
@@ -22,8 +22,8 @@
 							<p>{{event.date}} - {{event.location}}
 								{% if current_user.lvl == 2 %}
 									<span class="pull-right">
-										<a href="/edit_tevent/{{event.id}}" class="btn btn-success"> redaguoti </a>
-										<a href="/delete_tevent/{{event.id}}" class="btn btn-danger"> ištrinti </a>
+										<a href="/edit_tevent/{{event.id}}" class="btn btn-success"> {% if current_user.lang == "LT" %} Redaguoti {% else %} Edit {% endif %} </a>
+										<a href="/delete_tevent/{{event.id}}" class="btn btn-danger"> {% if current_user.lang == "LT" %} Ištrinti {% else %} Delete {% endif %} </a>
 									</span>
 								{% endif %}
 							</p>

@@ -14,13 +14,13 @@
 	<form class="form-horizontal  " role="form"  method="POST" enctype="multipart/form-data">
 		<h2>{% if current_user.lang == "LT" %} Dokumentai {% else %} Documents {% endif %}</h2><hr>
 			<div class="form-group">
-				<label for="photo" class="col-md-2 control-label">Dokumentas</label>
+				<label for="photo" class="col-md-2 control-label">{% if current_user.lang == "LT" %} Dokumentas {% else %} Document {% endif %}</label>
 				<div class="col-md-4">
 					<input type="file" id="file" name="file"  class="form-control-file" required>
 					
 				</div>
 				<div class="col-md-4">
-					<input type="submit" value="Pridėti dokumentą" class="btn btn-success btn-block pull-right">
+					<input type="submit" value="{% if current_user.lang == "LT" %} Pridėti dokumentą {% else %} Add document {% endif %}" class="btn btn-success btn-block pull-right">
 				</div>
 			</div>
 	</form>
@@ -34,7 +34,7 @@
 			{% for doc in docs %}
 			
 				<p> {% if current_user.lvl == 2%}
-					<a class="btn btn-danger" href="/delete_document/{{doc.id}}">Ištrinti</a>   
+					<a class="btn btn-danger" href="/delete_document/{{doc.id}}">{% if current_user.lang == "LT" %} Ištrinti {% else %} Delete {% endif %}</a>   
 					{% endif %}	
 					<a href="/download_document/{{doc.id}}"><big>{{doc.name}}</big> </a>     
 				</p>

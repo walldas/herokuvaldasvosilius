@@ -11,9 +11,12 @@
 	<div class = "row justify-content-md-center">
 		<div class = "col-lg-5 shadow-sm page">
 		
-			<h2>Jūsų registracija priimta</h2><hr>
-			<p> Prašome palaukti kol administratorius jus patvirtins</p>
-			
+			<h2>{% if current_user.lang == "LT" %}Jūsų registracija priimta{% else %} Your registration has been accepted{% endif %}</h2><hr>
+			{% if current_user.lang == "LT" %}
+				<p> Prašome palaukti kol administratorius jus patvirtins</p>
+			{% else %} 
+				<p> Please wait while your administrator approves you</p>
+			{% endif %}
 			
 			<br>
 			<br>

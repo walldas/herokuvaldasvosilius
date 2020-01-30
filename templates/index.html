@@ -7,11 +7,27 @@
 
 
 {% block page%}
+{% if current_user.confirmed == "False" and current_user.name|length > 1 %} 
+	<div class=" page text-center">
+	{% if current_user.lang == "LT" %}
+		<p> Prašome palaukti kol jus patvirtins administratorius</p>
+	{% else %}
+		<p>Please wait while administrator approves you</p>
+	{% endif %}
+
+	</div>
+{% endif %}
+
+
+
+
+
+
 
 <div class=" page">
 <h1> {% if current_user.lang == "LT" %} Apie LPD {% else %} About LPD {% endif %}</h1><hr>
 <p>{% if current_user.lvl == 2%}
-	<a href="/edit_about/{{data.id}}" class="btn btn-success pull-right"> Redaguoti </a>
+	<a href="/edit_about/{{data.id}}" class="btn btn-success pull-right">  {% if current_user.lang == "LT" %} Redaguoti {% else %} Edit {% endif %}</a>
 	{% endif %}
 	
 	{% if current_user.lang == "LT" %} 
@@ -28,12 +44,7 @@
 		{% endfor %}
 	
 </p>
-
-
-
-
 <a href="/history/" class="btn btn-outline-primary border">  {% if current_user.lang == "LT" %} toliau {% else %} more {% endif %}</a>
-
 </div>
 
 <a href="/Naujienos/" class="text-dark text-decoration-none">
@@ -71,12 +82,17 @@
 		<li>liko:</li>
 		<ul>
 			<li>EPS</li>
-			<li>Rodyti vartotojuj kad jis nepatvirtintas dar</li>
-			<li>išversti migtukus į anglų</li>
 			<li>paveiksliukas į pagrindini (jei bus) </li>
 			<li>sukelti į web kai, užsakovas nusipirks domena (informuoti iš kur pirkti) </li>
 		</ul></b>
 		
+		<li>0130 - atlikta </li>
+		<ul>
+			<li>prideti angliska vartotojo laukeli </li>
+			<li>Rodyti vartotojuj kad jis nepatvirtintas dar</li>
+			<li>išversti migtukus į anglų</li>
+		
+		</ul>
 		<li>0129 - Puslapis išverstas į anglų kalbą </li>
 		<li>0128 - Puslapis pradėtas versti į anglų kalbą.Sukurtas migtukas pakeisti kalbai. Įšversta Navigacija ir "Pagrindinis" </li>
 		<li>0127 - papildytas "Pagrindinis"</li>

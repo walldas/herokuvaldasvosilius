@@ -14,7 +14,7 @@
 <div class = "row">
 	<div class= " col-lg-10 page" >
 		{% if current_user.lvl == 2 %}
-			<a href="/edit_recruit/{{data.id}}" class="btn btn-success pull-right"> redaguoti</a>
+			<a href="/edit_recruit/{{data.id}}" class="btn btn-success pull-right"> {% if current_user.lang == "LT" %} Redaguoti {% else %} Edit {% endif %}</a>
 		{% endif %}
 		{% if current_user.lang == "LT" %} 
 			{% set arr = data.text.split('\n') %}
