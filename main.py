@@ -121,7 +121,17 @@ class About(db.Model):
 	date_created = db.Column(db.DateTime, default=datetime.utcnow)
 	text = db.Column(db.String(400000), default="")
 	text_en = db.Column(db.String(400000), default="")
-	
+
+class Document_EPS(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	name_lt = db.Column(db.String(4000), default="")	
+	name = db.Column(db.String(4000), default="")	
+	name_en = db.Column(db.String(4000), default="")	
+	URL = db.Column(db.String(4000), default="")	
+	link_name = db.Column(db.String(4000), default="")	
+	link_name_en = db.Column(db.String(4000), default="")	
+
 #============================ Duomenu Baze ============================	
 	
 	
@@ -236,8 +246,8 @@ def index():
 		data.text_en = "Admin have to add text"
 		db.session.add(data)
 		db.session.commit()
-	data.text = data.text.replace(" ","&nbsp")
-	data.text_en = data.text_en.replace(" ","&nbsp")
+	#data.text = data.text.replace(" ","&nbsp")
+	#data.text_en = data.text_en.replace(" ","&nbsp")
 	news_ = list(reversed(News.query.order_by(News.date_created).all()))
 	return render_template("index.html", data=data,news=news_, current_user=current_user())
 	#return render_template("index.html", current_user = current_user())
@@ -664,8 +674,8 @@ def history():
 		data.text_en = "Admin have to add text"
 		db.session.add(data)
 		db.session.commit()
-	data.text = data.text.replace(" ","&nbsp")
-	data.text_en = data.text_en.replace(" ","&nbsp")
+	#data.text = data.text.replace(" ","&nbsp")
+	#data.text_en = data.text_en.replace(" ","&nbsp")
 	return render_template("History.html", data=data, current_user=current_user())
 	
 
@@ -698,8 +708,8 @@ def officer():
 		data.text_en = "Admin have to add text"
 		db.session.add(data)
 		db.session.commit()
-	data.text = data.text.replace(" ","&nbsp")
-	data.text_en = data.text_en.replace(" ","&nbsp")
+	#data.text = data.text.replace(" ","&nbsp")
+	#data.text_en = data.text_en.replace(" ","&nbsp")
 	return render_template("Officer.html", data=data, current_user=current_user())
 	
 
@@ -733,8 +743,8 @@ def comision():
 		data.text_en = "Admin have to add text"
 		db.session.add(data)
 		db.session.commit()
-	data.text = data.text.replace(" ","&nbsp")
-	data.text_en = data.text_en.replace(" ","&nbsp")
+	#data.text = data.text.replace(" ","&nbsp")
+	#data.text_en = data.text_en.replace(" ","&nbsp")
 	return render_template("Comision.html", data=data, current_user=current_user())
 	
 
@@ -770,8 +780,8 @@ def recruit():
 		data.text_en = "Admin have to add text"
 		db.session.add(data)
 		db.session.commit()
-	data.text = data.text.replace(" ","&nbsp")
-	data.text_en = data.text_en.replace(" ","&nbsp")
+	#data.text = data.text.replace(" ","&nbsp")
+	#data.text_en = data.text_en.replace(" ","&nbsp")
 	return render_template("Recruit.html", data=data, current_user=current_user())
 	
 
@@ -805,8 +815,8 @@ def purpose():
 		data.text_en = "Admin have to add text"
 		db.session.add(data)
 		db.session.commit()
-	data.text = data.text.replace(" ","&nbsp")
-	data.text_en = data.text_en.replace(" ","&nbsp")
+	#data.text = data.text.replace(" ","&nbsp")
+	#data.text_en = data.text_en.replace(" ","&nbsp")
 	return render_template("Purpose.html", data=data, current_user=current_user())
 	
 
@@ -925,7 +935,65 @@ def delete_image(id):
 		return 'problema trinant paveiksliuka'	
 	
 
+#============================ EPS ============================	
 	
+@app.route("/EPS/", methods=["GET", "POST"])
+def documents_eps():
+	docs = list(reversed(Document_EPS.query.order_by(Document_EPS.date_created).all()))
+	return render_template("EPS.html",docs = docs, current_user=current_user())	
+
+@app.route("/create_EPS/", methods=["GET", "POST"])
+def create_documents_eps():
+	if request.method == "POST":
+		docs = list(reversed(Document_EPS.query.order_by(Document_EPS.date_created).all()))
+		file = request.files['file']
+		name_lt = request.form['name_lt']
+		name_en = request.form['name_en']
+		link = request.form['link']
+		if not is_name_in_docs(file.filename, docs):
+			path = app.config['UPLOAD_DOCS'] + file.filename
+			try:
+				file.save(path)
+			except:
+				return "nepavyko issaugoti failo i vieta"
+			try:
+				documen = Document_EPS()
+				documen.name = file.filename
+				documen.name_en = name_en
+				documen.name_lt = name_lt
+				documen.URL = link
+				db.session.add(documen)
+				db.session.commit()
+				return redirect('/EPS/')
+			except:
+				return "nepavyko issaugoti vardo i duomenu baze"
+	return render_template("EPS_create.html", current_user=current_user())
+
+
+@app.route('/download_document_EPS/<int:id>', methods=['GET', 'POST'])
+def download_document_eps(id):
+	doc = Document_EPS.query.get_or_404(id)
+	if len(doc.name)> 0:
+		path =  app.config['UPLOAD_DOCS'] + doc.name
+		return send_file(path, as_attachment=True)
+	return redirect('/EPS/')
+	
+	
+
+@app.route('/delete_document_EPS/<int:id>', methods=['GET', 'POST'])
+def delete_document_eps(id):
+	doc = Document_EPS.query.get_or_404(id)
+	try:
+		try:
+			path =  app.config['UPLOAD_DOCS'] + doc.name
+			print(path)
+			os.remove(path)
+		except:pass
+		db.session.delete(doc)
+		db.session.commit()
+		return redirect('/EPS/')
+	except:
+		return 'problema trinant dokumenta'
 	
 	
 	

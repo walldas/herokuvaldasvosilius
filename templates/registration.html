@@ -69,12 +69,11 @@
                  <!-- /.form-group -->
                 <div class="form-group">
                     <div class="col-md-12">
-                        <span class="help-block">{% if current_user.lang == "LT" %} *butina užpildyti{% else %} * required {% endif %}</span>
+                        <span class="help-block">{% if current_user.lang == "LT" %} * būtina užpildyti{% else %} * required {% endif %}</span>
                     </div>
                 </div>
 				
 				
-				<!--<button type="submit" class="btn btn-success btn-block">Registruotis</button>-->
 				
 				
 				<input type="submit" value={% if current_user.lang == "LT" %} "Registruotis"{% else %} "Sign up"{% endif %} class="btn btn-success btn-block btn-sm">

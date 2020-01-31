@@ -89,7 +89,7 @@
         <div class="dropdown-menu bg_dark" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="/dokumentai/">{% if current_user.lang == "LT" %} Dokumentai {% else %} Documents {% endif %}</a>
           <a class="dropdown-item" href="/galerija/">{% if current_user.lang == "LT" %} Galerija {% else %} Gallery {% endif %}</a>
-          <a class="dropdown-item" href="#">EPS</a>
+          <a class="dropdown-item" href="/EPS/">{% if current_user.lang == "LT" %} EPS {% else %} EAP {% endif %}</a>
         </div>
       </li>
 	  {% endif %}
