@@ -43,6 +43,13 @@
                     <label for="password" class="col-sm-3 control-label" >{% if current_user.lang == "LT" %} Slaptažodis*{% else %} Password * {% endif %}</label>
                     <div class="col-sm-9">
                         <input type="password" id="password" name="password"  class="form-control" required  pattern="(?=.*\d)(?=.*[a-z])(?=.*[0-9]).{5,}">
+						<div class="invalid-feedback">
+							{% if current_user.lang == "LT" %}
+								slaptažodis turi būti bent 5 simbolių ilgio ir turėti skaičiu 
+							{% else %}
+								password must be at least 5 characters long and have number
+							{% endif %}
+						</div>
                     </div>
                 </div>
                 

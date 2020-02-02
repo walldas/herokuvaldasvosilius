@@ -13,6 +13,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data_base.db'
 app.config['UPLOAD_DOCS'] = "static/doc/"
 app.config['UPLOAD_Images'] = "static/galerija/"
+app.config['UPLOAD_BACKGROUND'] = "static/img/"
+DEFAULT_IMG = "cropped-1920.jpg"
 db = SQLAlchemy(app)
 
 #============================ Lentutes ============================
@@ -132,6 +134,12 @@ class Document_EPS(db.Model):
 	link_name = db.Column(db.String(4000), default="")	
 	link_name_en = db.Column(db.String(4000), default="")	
 
+class Topimg(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	date_created = db.Column(db.DateTime, default=datetime.utcnow)
+	name = db.Column(db.String(100), default="")
+	
+	
 #============================ Duomenu Baze ============================	
 	
 	
@@ -159,7 +167,14 @@ if not os.path.exists(app.config['SQLALCHEMY_DATABASE_URI']):
 		
 		
 #============================ Base ============================
-		
+def get_bg_img():
+	try:
+		data = Topimg.query.get_or_404(1)
+		img = data.name
+	except:
+		img = "../" + app.config['UPLOAD_BACKGROUND'] + DEFAULT_IMG
+	return img
+	
 def guest_user():
 	current_user = User()
 	current_user.name=""
@@ -197,7 +212,7 @@ def login():
 
 		if hashed_password != user.password:
 			message =  "WRONG PASSWORD! / Klaidingas Slaptažodis"
-			return render_template("login.html", email = email, message = message,fokus="", current_user=current_user())
+			return render_template("login.html", email = email, message = message,fokus="", current_user=current_user(),bg_img=get_bg_img())
 			
 		elif hashed_password == user.password:
 			user.session_token = str(uuid.uuid4())
@@ -210,7 +225,7 @@ def login():
 			response.set_cookie("current-user-lang", str(user.lang)) 
 			return response
 	else:
-		return render_template("login.html", email = email, message = message,fokus=fokus, current_user=current_user())
+		return render_template("login.html", email = email, message = message,fokus=fokus, current_user=current_user(), bg_img=get_bg_img())
 		
 		
 @app.route("/logout/")
@@ -221,8 +236,7 @@ def logout():
 	response.set_cookie('current-user-lvl', '', expires=0)
 	response.set_cookie('current-user-id', '', expires=0)
 	response.set_cookie('current-user-email', '', expires=0)
-	response.set_cookie('current-user-lang', '', expires=0)
-	
+	#response.set_cookie('current-user-lang', '', expires=0)
 	return response
 	
 @app.route("/change_lang/")
@@ -235,7 +249,9 @@ def change_lang():
 		response.set_cookie("current-user-lang","EN") 	
 	return response
 
+	
 
+	
 @app.route("/")
 def index():
 	try:
@@ -246,11 +262,9 @@ def index():
 		data.text_en = "Admin have to add text"
 		db.session.add(data)
 		db.session.commit()
-	#data.text = data.text.replace(" ","&nbsp")
-	#data.text_en = data.text_en.replace(" ","&nbsp")
 	news_ = list(reversed(News.query.order_by(News.date_created).all()))
-	return render_template("index.html", data=data,news=news_, current_user=current_user())
-	#return render_template("index.html", current_user = current_user())
+	return render_template("index.html", data=data,news=news_,bg_img=get_bg_img(), current_user=current_user())
+	
 	
 	
 @app.route("/edit_about/<int:id>", methods=["GET", "POST"])
@@ -265,13 +279,13 @@ def edit_about(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("APIE_create.html",data=data, current_user=current_user())
+		return render_template("APIE_create.html",data=data, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 	
 @app.errorhandler(404)
 def page_not_found(error):
-   return render_template('404.html',current_user=current_user()), 404
+   return render_template('404.html',current_user=current_user(),bg_img=get_bg_img()), 404
 	
 	
 	
@@ -298,13 +312,13 @@ def registration():
 		try:
 			db.session.add(user)
 			db.session.commit()
-			return render_template("registration_sucess.html", current_user=current_user())
+			return render_template("registration_sucess.html", current_user=current_user(), bg_img=get_bg_img())
 			
 		except:
 			
 			return 'buvo problema dedant i db'
 	else:
-		return render_template("registration.html", current_user=current_user())
+		return render_template("registration.html", current_user=current_user(), bg_img=get_bg_img())
 		
 
 	
@@ -313,14 +327,14 @@ def registration():
 @app.route("/sms/")
 def messages_users():
 	messages_ = list(reversed(Messages.query.order_by(Messages.date_created).all()))
-	return render_template("sms.html", messages=messages_, current_user=current_user())
+	return render_template("sms.html", messages=messages_, current_user=current_user(), bg_img=get_bg_img())
 	
 #============================ Vartotojai ============================
 
 @app.route("/vartotojai/", methods=["POST","GET"])
 def control_users():
 	users = reversed(User.query.order_by(User.date_created).all())
-	return render_template("vartotojai.html", users=users, current_user=current_user())
+	return render_template("vartotojai.html", users=users, current_user=current_user(), bg_img=get_bg_img())
 	
 
 
@@ -383,7 +397,7 @@ def edit_user(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("profilis.html",user=user, current_user=current_user())
+		return render_template("profilis.html",user=user, current_user=current_user(), bg_img=get_bg_img())
 
 	
 	
@@ -436,7 +450,7 @@ def contacts_of_users():
 		message.sms = request.form['message']
 		db.session.add(message)
 		db.session.commit()
-		return render_template("zinute_priimta.html", current_user=current_user())
+		return render_template("zinute_priimta.html", current_user=current_user(), bg_img=get_bg_img())
 	else:
 		users_ = reversed(User.query.order_by(User.date_created).all())
 		users = []
@@ -445,8 +459,8 @@ def contacts_of_users():
 			contact_main = Contact_text.query.get_or_404(1)
 		except:
 			contact_main = Contact_text()
-			contact_main.info = "Kontaktai pilnai neužpildyti"
-			contact_main.info_en = "Main info need to fill"
+			contact_main.info = "Bendroji kontaktinė informacija neužpildyta"
+			contact_main.info_en = "General contact information is blank"
 			db.session.add(contact_main)
 			db.session.commit()
 		
@@ -454,7 +468,7 @@ def contacts_of_users():
 		for user in users_:
 			if user.show == "True":
 				users.append(user)
-		return render_template("kontaktai.html", users=users, contact_main=contact_main, current_user=current_user())
+		return render_template("kontaktai.html", users=users, contact_main=contact_main, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 	
@@ -471,7 +485,7 @@ def edit_contact_info(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("redaguoti_kontaktus.html",contact_main=main_info, current_user=current_user())
+		return render_template("redaguoti_kontaktus.html",contact_main=main_info, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 
@@ -481,7 +495,7 @@ def edit_contact_info(id):
 @app.route("/Naujienos/", methods=["GET", "POST"])
 def news():
 	news_ = list(reversed(News.query.order_by(News.date_created).all()))
-	return render_template("Naujienos.html",news = news_ , current_user=current_user())
+	return render_template("Naujienos.html",news = news_ , current_user=current_user(), bg_img=get_bg_img())
 	
 
 @app.route("/create_news/", methods=["GET", "POST"])	
@@ -503,7 +517,7 @@ def create_news():
 		except:
 			return "nepavyko prideti naujienos i db"
 	else:
-		return render_template("Naujienos_create.html",new = new_, current_user=current_user())
+		return render_template("Naujienos_create.html",new = new_, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 	
@@ -521,7 +535,7 @@ def edit_new(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("Naujienos_create.html",new = new_, current_user=current_user())
+		return render_template("Naujienos_create.html",new = new_, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 @app.route("/delete_new/<int:id>", methods=["GET", "POST"])
@@ -542,7 +556,7 @@ def delete_new(id):
 @app.route("/Renginiai_lietuvoje/", methods=["GET", "POST"])
 def events():
 	events = list(reversed(News_in_LT.query.order_by(News_in_LT.date_created).all()))
-	return render_template("Renginiai_lietuvoje.html",events = events , current_user=current_user())
+	return render_template("Renginiai_lietuvoje.html",events = events , current_user=current_user(), bg_img=get_bg_img())
 	
 
 @app.route("/create_event/", methods=["GET", "POST"])	
@@ -564,7 +578,7 @@ def create_event():
 		except:
 			return "nepavyko prideti naujienos i db"
 	else:
-		return render_template("Renginiai_lietuvoje_create.html",event = event, current_user=current_user())
+		return render_template("Renginiai_lietuvoje_create.html",event = event, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 	
@@ -582,7 +596,7 @@ def edit_event(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("Renginiai_lietuvoje_create.html",event = event, current_user=current_user())
+		return render_template("Renginiai_lietuvoje_create.html",event = event, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 @app.route("/delete_event/<int:id>", methods=["GET", "POST"])
@@ -605,7 +619,7 @@ def delete_event(id):
 @app.route("/Tarptautiniai_renginiai/", methods=["GET", "POST"])
 def tevents():
 	events = list(reversed(News_in_World.query.order_by(News_in_World.date_created).all()))
-	return render_template("Tartautiniai_renginiai.html",events = events , current_user=current_user())
+	return render_template("Tartautiniai_renginiai.html",events = events , current_user=current_user(), bg_img=get_bg_img())
 	
 
 @app.route("/create_tevent/", methods=["GET", "POST"])	
@@ -627,7 +641,7 @@ def tcreate_event():
 		except:
 			return "nepavyko prideti naujienos i db"
 	else:
-		return render_template("Tartautiniai_renginiai_create.html",event = event, current_user=current_user())
+		return render_template("Tartautiniai_renginiai_create.html",event = event, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 	
@@ -645,7 +659,7 @@ def tedit_event(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("Tartautiniai_renginiai_create.html",event = event, current_user=current_user())
+		return render_template("Tartautiniai_renginiai_create.html",event = event, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 @app.route("/delete_tevent/<int:id>", methods=["GET", "POST"])
@@ -676,7 +690,7 @@ def history():
 		db.session.commit()
 	#data.text = data.text.replace(" ","&nbsp")
 	#data.text_en = data.text_en.replace(" ","&nbsp")
-	return render_template("History.html", data=data, current_user=current_user())
+	return render_template("History.html", data=data, current_user=current_user(), bg_img=get_bg_img())
 	
 
 @app.route("/edit_history/<int:id>", methods=["GET", "POST"])
@@ -691,7 +705,7 @@ def edit_history(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("APIE_create.html",data=data, current_user=current_user())
+		return render_template("APIE_create.html",data=data, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 	
@@ -710,7 +724,7 @@ def officer():
 		db.session.commit()
 	#data.text = data.text.replace(" ","&nbsp")
 	#data.text_en = data.text_en.replace(" ","&nbsp")
-	return render_template("Officer.html", data=data, current_user=current_user())
+	return render_template("Officer.html", data=data, current_user=current_user(), bg_img=get_bg_img())
 	
 
 @app.route("/edit_officer/<int:id>", methods=["GET", "POST"])
@@ -725,7 +739,7 @@ def edit_officer(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("APIE_create.html",data=data, current_user=current_user())
+		return render_template("APIE_create.html",data=data, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 
@@ -745,7 +759,7 @@ def comision():
 		db.session.commit()
 	#data.text = data.text.replace(" ","&nbsp")
 	#data.text_en = data.text_en.replace(" ","&nbsp")
-	return render_template("Comision.html", data=data, current_user=current_user())
+	return render_template("Comision.html", data=data, current_user=current_user(), bg_img=get_bg_img())
 	
 
 @app.route("/edit_comision/<int:id>", methods=["GET", "POST"])
@@ -760,7 +774,7 @@ def edit_comision(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("APIE_create.html",data=data, current_user=current_user())
+		return render_template("APIE_create.html",data=data, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 	
@@ -782,7 +796,7 @@ def recruit():
 		db.session.commit()
 	#data.text = data.text.replace(" ","&nbsp")
 	#data.text_en = data.text_en.replace(" ","&nbsp")
-	return render_template("Recruit.html", data=data, current_user=current_user())
+	return render_template("Recruit.html", data=data, current_user=current_user(), bg_img=get_bg_img())
 	
 
 @app.route("/edit_recruit/<int:id>", methods=["GET", "POST"])
@@ -797,7 +811,7 @@ def edit_recruit(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("APIE_create.html",data=data, current_user=current_user())
+		return render_template("APIE_create.html",data=data, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 	
@@ -817,7 +831,7 @@ def purpose():
 		db.session.commit()
 	#data.text = data.text.replace(" ","&nbsp")
 	#data.text_en = data.text_en.replace(" ","&nbsp")
-	return render_template("Purpose.html", data=data, current_user=current_user())
+	return render_template("Purpose.html", data=data, current_user=current_user(), bg_img=get_bg_img())
 	
 
 @app.route("/edit_purpose/<int:id>", methods=["GET", "POST"])
@@ -832,7 +846,7 @@ def edit_purpose(id):
 		except:
 			return "nepavyko atnaujinti"
 	else:
-		return render_template("APIE_create.html",data=data, current_user=current_user())
+		return render_template("APIE_create.html",data=data, current_user=current_user(), bg_img=get_bg_img())
 	
 	
 	
@@ -863,7 +877,7 @@ def documents():
 			except:
 				return "nepavyko issaugoti vardo i duomenu baze"
 	docs = list(reversed(Document.query.order_by(Document.date_created).all()))
-	return render_template("dokumentai.html",docs = docs, current_user=current_user())	
+	return render_template("dokumentai.html",docs = docs, current_user=current_user(), bg_img=get_bg_img())	
 	
 
 @app.route('/download_document/<int:id>', methods=['GET', 'POST'])
@@ -916,7 +930,7 @@ def galerija():
 			except:
 				return "nepavyko issaugoti vardo i duomenu baze"
 	images = list(reversed(MyImage.query.order_by(MyImage.date_created).all()))	
-	return render_template("galerija.html",images = images, current_user=current_user())	
+	return render_template("galerija.html",images = images, current_user=current_user(), bg_img=get_bg_img())	
 	
 	
 	
@@ -940,7 +954,7 @@ def delete_image(id):
 @app.route("/EPS/", methods=["GET", "POST"])
 def documents_eps():
 	docs = list(reversed(Document_EPS.query.order_by(Document_EPS.date_created).all()))
-	return render_template("EPS.html",docs = docs, current_user=current_user())	
+	return render_template("EPS.html",docs = docs, current_user=current_user(),bg_img=get_bg_img())	
 
 @app.route("/create_EPS/", methods=["GET", "POST"])
 def create_documents_eps():
@@ -967,7 +981,7 @@ def create_documents_eps():
 				return redirect('/EPS/')
 			except:
 				return "nepavyko issaugoti vardo i duomenu baze"
-	return render_template("EPS_create.html", current_user=current_user())
+	return render_template("EPS_create.html", current_user=current_user(), bg_img=get_bg_img())
 
 
 @app.route('/download_document_EPS/<int:id>', methods=['GET', 'POST'])
@@ -995,16 +1009,38 @@ def delete_document_eps(id):
 	except:
 		return 'problema trinant dokumenta'
 	
-	
-	
+#====================== TOP paveiksliukas ==============================
 
+def delete_Topimg():
+	doc = Topimg.query.get_or_404(1)
+	try:
+		os.remove(doc.name[3:])
+	except:pass
+	db.session.delete(doc)
+	db.session.commit()
+		
+@app.route("/top_image/", methods=["GET", "POST"])
+def top_image():
+	if request.method == "POST":
+		file = request.files['file']
+		path = app.config['UPLOAD_BACKGROUND'] + file.filename
+		try:
+			file.save(path)
+			imgs = list(reversed(Topimg.query.order_by(Topimg.date_created).all()))
+			if len(imgs)>0:
+				delete_Topimg()
+		except:
+			return "nepavyko issaugoti failo i vieta"
+		try:
+			img = Topimg()
+			img.name = "../" + app.config['UPLOAD_BACKGROUND'] + file.filename
+			db.session.add(img)
+			db.session.commit()
+			return redirect('/')
+		except:
+			return "nepavyko issaugoti vardo i duomenu baze"
 	
-
-
-	
-	
-	
-	
+	return render_template("topimg.html", current_user=current_user(), bg_img=get_bg_img())
 	
 	
 	

@@ -10,6 +10,11 @@
 
 <h2> {% if current_user.lang == "LT" %} Kontaktai {% else %} Contacts {% endif %}</h2>
 
+
+
+
+{% if contact_main.info|length > 50 or contact_main.info_en|length > 50 or current_user.lvl == 2%}
+
 <hr class="my_hr">
 <div class = "row">
 	<div class= " col-lg-6 page" >
@@ -33,12 +38,12 @@
 
 
 
+{% endif %}
 
 
 
 
-
-
+{% if  users|length != 0  or current_user.lvl == 2%}
 
 
 <hr class="my_hr">
@@ -81,6 +86,9 @@
 			{% endif %}
 		</div>
 	</div>
+	
+	{% endif %}
+	
 	
 	<hr class="my_hr">
 	

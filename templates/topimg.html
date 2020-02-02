@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+
+{% block head%}{% if current_user.lang == "LT" %} Svetainės paveiksliukas {% else %} Top foto {% endif %}{% endblock %}
+
+
+
+
+{% block page%}
+<div class = "row justify-content-md-center">
+	<div class = "col-lg-12 shadow-sm page">
+	{% if current_user.lvl == 2%}
+		<div class = "row justify-content-md-center">
+			<div class = "col-lg-12  page">
+
+				{% if current_user.lvl == 2%}
+				<form class="form-horizontal  " role="form"  method="POST" enctype="multipart/form-data">
+					<h2>{% if current_user.lang == "LT" %} Svetainės paveiksliukas {% else %} Top foto {% endif %}</h2><hr>
+						<div class="form-group">
+							<label for="photo" class="col-md-2 control-label">{% if current_user.lang == "LT" %} Paveiksliukas {% else %} Image{% endif %}</label>
+							<div class="col-md-4">
+								<input type="file" id="file" name="file"  class="form-control-file" required>
+								
+							</div>
+							<div class="col-md-4">
+								<input type="submit" value="{% if current_user.lang == "LT" %} Įkelti {% else %} upload {% endif %}" class="btn btn-success btn-block pull-right">
+							</div>
+						</div>
+				</form>
+				{% endif %}	
+			</div>
+			</div>
+		
+		{% else %}
+		 error 404
+		{% endif %}
+	</div>
+</div>
+
+{% endblock %}

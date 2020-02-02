@@ -19,10 +19,15 @@
 	{% if current_user.lang == "LT" %}
 		<a href="/change_lang/" class="btn pull-right"> <img src="../static/img/EN.png"></a>
 	{% else %}
+		
 		<a href="/change_lang/" class="btn pull-right"> <img src="../static/img/LT.png"></a>
 	{% endif %}
+	 {% if current_user.lvl == 2 %}
+		<a href="/top_image/" class="btn btn-dark pull-left bg_dark">{% if current_user.lang == "LT" %} Fonas {% else %} Background {% endif %}</a>
+	{% endif %}
 	
-<div class= "top-image" style="background-image: url(../static/img/cropped-1920.jpg);">
+<!--<div class= "top-image" style="background-image: url(../static/img/cropped-1920.jpg);"> -->
+<div class= "top-image" style="background-image: url({{bg_img}});">
 		<!--<img class="img-flex" src="../static/img/cropped-1920.jpg"/>-->
 		<div class="container">
 			<div class="blog-logoa">
