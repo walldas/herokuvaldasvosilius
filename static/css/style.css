@@ -1,113 +1,50 @@
 body {
-    background-color: #e9ebee;
-	font-family: 'Raleway', sans-serif;
-	font-family: 'Lato', sans-serif;
+	background-color: #000;
+	color: white;
+	font-family: 'Open Sans', sans-serif;
 }
 
-.img-flex{
-	width:100%;
+.container {
+  grid-template-columns: 1fr 50px 1fr 1fr;
+  display: grid | inline-grid;  
 }
 
-.navbar{
-	margin-bottom:0px !important ;
+.login_center {
+	padding:0;
+	margin: 30% 0%;
+	text-align: center;
 }
 
-.page{
-		padding: 20px;
-		/*border: 1px solid rgba(255,55,255,0.6);*/
-		margin:20px auto;
-		border-radius: 5px;
-		background-color: white;
 	
-}
-
-
-.empty_page{
-		padding: 20px;
-		margin:20px auto;
-		border-radius: 5px;
-}
-
-.shadow-lg{
-	padding:20px;
-	border-radius: 5px;
-}
-
-.blog-logoa img {
-	max-height: 250px;
-	width: auto;
-	max-width: 100%;
-	height: auto;
-	/*padding-left: 20%;*/
-}
-
-.top-image{
+.login_center > form > input{
+	color:red;
+	background: transparent;
+	border:none;
 	
-	bottom: 0px;
-	padding: 100px 0;
-	background: no-repeat center;
-	background-size: cover;
-	-moz-background-size: cover;
-	-webkit-background-size: cover;
-}
-
-.my_hr { 
-	display: block; 
-	height: 1px;
-    border: 0; 
-	border-top: 1px solid #1D1D1D;
-    margin: 1em 0; 
-	padding: 0; 
-	}
-
-.bg_dark{
-	background-color:#1D1D1D;
-}
-
-.bg_dark>a{
-	color:rgba(255,255,255,0.5);
+	outline: none;
+	text-align: center;
 	padding:10px;
+	width:30%;
 }
 
-.bg_dark>a:hover{
-	background-color:#1D1D1D;
-	color:rgba(255,255,255,1);
+.hide{
+	display:none;
 }
 
-.footer {
-	color:rgba(255,255,255,0.5);
-	padding:20px 0px 30px 0px;
-}
-.footer a{
-	color:rgba(255,255,255,0.5);
-	text-decoration: none;
-}
-.footer .container{
-	border-top: 1px solid rgba(255,255,255,0.5);
-	padding:20px 0px ;
-}
-
-.bg_red{
-	background-color: red;
-}
-
-.bg_green{
-	background-color: green;
+.wrong_pass{	
+	/* animation: glowing 0.7s infinite; */
+	animation: glowing 1s  3;
+	animation-delay: 1s;
 }
 
 
-.mini_btn{
-	padding:0 3px;
-	border-radius: 50%;
-	text-decoration: none;
-	color:white;
+@keyframes glowing{
+	0%   {box-shadow: 0px 0px 0px 0px  red;border-bottom: 1px solid white;}
+	50%  {box-shadow: 0px 0px 10px 10px  red;border-bottom: 1px solid rgba(255,0,0,0.95);}
+	100% {box-shadow: 0px 0px 0px 0px  red;border-bottom: 1px solid white;}
 }
-
-.card_{
-	margin: 5px ! important;
-}
-
-.border{
-	border: 1px solid blue;
-}
-
+.line {	
+		border-bottom: 1px solid white;
+		width: 30%;
+		margin: 0 auto;		
+}	
